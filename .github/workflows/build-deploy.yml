@@ -47,11 +47,11 @@ jobs:
       #     tags: ghcr.io/${{ github.repository_owner }}/frontend:latest
 
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
             # Pull the latest images
