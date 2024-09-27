@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int             @id @default(autoincrement())
+  email    String          @unique
+  name     String
+  surname  String
+  projects UserProject[]
+  tasks    Task[]
+  invites  ProjectInvite[]
+  comments Comment[]
+}
+
+model Project {
+  id       Int             @id @default(autoincrement())
+  name     String
+  users    UserProject[]
+  invites  ProjectInvite[]
+  comments Comment[]
+}
+
+enum Role {
+  owner
+  maintainer
+}
+
+model UserProject {
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+  userId    Int
+  projectId Int
+  role      Role
+
+  @@id([userId, projectId])
+  @@unique([projectId, userId])
+}
+
+model ProjectInvite {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+  userId    Int
+  projectId Int
+  role      Role
+}
+
+enum Status {
+  todo
+  inProgress
+  done
+}
+
+enum Priority {
+  none
+  low
+  medium
+  high
+}
+
+enum Size {
+  xs
+  s
+  m
+  l
+  xl
+}
+
+model Task {
+  id              Int       @id @default(autoincrement())
+  name            String
+  description     String
+  status          Status
+  priority        Priority
+  size            Size
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime?
+  expectedDoneAt  DateTime?
+  doneAt          DateTime?
+  assignedToUsers User[]
+  gitIssue        String?
+  gitPullRequest  String?
+  gitBranch       String?
+  comments        Comment[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  task      Task      @relation(fields: [taskId], references: [id])
+  taskId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  project   Project   @relation(fields: [projectId], references: [id])
+  projectId Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  content   String
+}
