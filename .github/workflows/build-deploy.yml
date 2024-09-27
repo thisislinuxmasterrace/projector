@@ -47,22 +47,22 @@ jobs:
       #     push: true
       #     tags: ghcr.io/${{ github.repository_owner }}/frontend:latest
 
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          # host: ${{ secrets.HOST }}
-          # username: ${{ secrets.USERNAME }}
-          # password: ${{ secrets.PASSWORD }}
-          port: 22
-          script: |
-            # Pull the latest images
-            docker pull ghcr.io/${{ github.repository_owner }}/api:latest
-            docker pull ghcr.io/${{ github.repository_owner }}/frontend:latest
-            
-            # Start the containers
-            docker-compose -f /root/projector/docker-compose.yml up -d
-            
-            # Remove old images
-            docker image prune -f
-            docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/api:latest" -q) || true
-            docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/frontend:latest" -q) || true
+      # - name: Deploy to Server
+      #  uses: appleboy/ssh-action@v1.0.3
+      #  with:
+      #    host: ${{ secrets.HOST }}
+      #    username: ${{ secrets.USERNAME }}
+      #    password: ${{ secrets.PASSWORD }}
+      #    port: 22
+      #    script: |
+      #      # Pull the latest images
+      #      docker pull ghcr.io/${{ github.repository_owner }}/api:latest
+      #      docker pull ghcr.io/${{ github.repository_owner }}/frontend:latest
+      #     
+      #     # Start the containers
+      #     docker-compose -f /root/projector/docker-compose.yml up -d
+      #     
+      #     # Remove old images
+      #     docker image prune -f
+      #     docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/api:latest" -q) || true
+      #     docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/frontend:latest" -q) || true
