@@ -37,6 +37,7 @@ jobs:
           file: ./api/Dockerfile  # Path to your API Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/api:latest
+          visibility: public
 
       # - name: Build and push Frontend Docker image
       #   uses: docker/build-push-action@v2
