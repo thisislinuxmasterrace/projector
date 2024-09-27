@@ -50,9 +50,9 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          # host: ${{ secrets.HOST }}
+          # username: ${{ secrets.USERNAME }}
+          # password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
             # Pull the latest images
