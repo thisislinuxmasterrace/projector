@@ -43,7 +43,7 @@ export class UsersController {
   }
 
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     example: {
       id: 2,
       email: 'archhaze@hotmail.lol',
