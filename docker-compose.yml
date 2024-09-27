@@ -12,6 +12,8 @@ services:
       - postgres-volume:/var/lib/postgresql/data
   api:
     image: ghcr.io/thisislinuxmasterrace/api:latest
+    ports:
+      - 3000:3000
     build:
       context: ./api
       dockerfile: Dockerfile
