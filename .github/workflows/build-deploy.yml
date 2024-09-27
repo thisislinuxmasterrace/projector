@@ -1,0 +1,60 @@
+name: Build, Push Docker Images, and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push API Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./api  # Path to your API directory
+          file: ./api/Dockerfile  # Path to your API Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/api:latest
+
+      # - name: Build and push Frontend Docker image
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./frontend  # Path to your frontend directory
+      #     file: ./frontend/Dockerfile  # Path to your Frontend Dockerfile
+      #     push: true
+      #     tags: ghcr.io/${{ github.repository_owner }}/frontend:latest
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: ${{ secrets.SERVER_IP }}  # Your server's IP address
+          username: ${{ secrets.SERVER_USER }}  # Your SSH username
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key
+          port: 22  # Change if your SSH port is different
+          script: |
+            # Pull the latest images
+            docker pull ghcr.io/${{ github.repository_owner }}/api:latest
+            docker pull ghcr.io/${{ github.repository_owner }}/frontend:latest
+            
+            # Start the containers
+            docker-compose -f /root/projector/docker-compose.yml up -d
+            
+            # Remove old images
+            docker image prune -f
+            docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/api:latest" -q) || true
+            docker rmi $(docker images -f "before=ghcr.io/${{ github.repository_owner }}/frontend:latest" -q) || true
