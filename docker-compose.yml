@@ -4,16 +4,13 @@ services:
   postgres:
     image: postgres:16
     restart: unless-stopped
-    ports:
-      - 5432:5432
-    env_file:
-      - .env
     volumes:
       - postgres-volume:/var/lib/postgresql/data
+    env_file:
+      - .env
+
   api:
     image: ghcr.io/thisislinuxmasterrace/api:latest
-    ports:
-      - 3000:3000
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -22,17 +19,34 @@ services:
       - postgres
     env_file:
       - .env
-#  nginx:
-#    restart: unless-stopped
-#    image: nginx:1.19-alpine
-#    volumes:
-#      - ./nginx.conf:/etc/nginx/templates/default.conf.template
-#   env_file:
-#      - .env
-#    ports:
-#      - "${NGINX_PORT}:${NGINX_PORT}"
-#    depends_on:
-#      - api
+    
+  frontend:
+    image: ghcr.io/thisislinuxmasterrace/frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - frontend-build:/usr/share/nginx/html
+    depends_on:
+      - api
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:stable
+    restart: unless-stopped
+    volumes:
+      - frontend-build:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    depends_on:
+      - frontend
+      - api
+    env_file:
+      - .env
 
 volumes:
   postgres-volume:
+  frontend-build:
