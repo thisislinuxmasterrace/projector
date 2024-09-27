@@ -6,6 +6,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateProjectDto } from './dto/updateProject.dto';
 import { ReadProjectDto } from './dto/readProject.dto';
 import { DeleteProjectDto } from './dto/deleteProject.dto';
+import { UsersController } from '../users/users.controller';
+import { CreateInviteDto } from './dto/createInvite.dto';
+import { AcceptInviteDto } from './dto/acceptInvite.dto';
+import { RejectInviteDto } from './dto/rejectInvite.dto';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -38,5 +42,26 @@ export class ProjectsController {
   @ApiBearerAuth()
   async delete(@Body() deleteProjectDto: DeleteProjectDto, @Req() req: any) {
     return this.projectsService.delete(deleteProjectDto, req.user.sub)
+  }
+
+  @Post('invites/create')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  async createInvite(@Body() createInviteDto: CreateInviteDto, @Req() req: any) {
+    return this.projectsService.createInvite(createInviteDto, req.user.sub)
+  }
+
+  @Post('invites/accept')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  async acceptInvite(@Body() acceptInviteDto: AcceptInviteDto, @Req() req: any) {
+    return this.projectsService.acceptInvite(acceptInviteDto, req.user.sub)
+  }
+
+  @Delete('invites/reject')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  async rejectInvite(@Body() rejectInviteDto: RejectInviteDto, @Req() req: any) {
+    return this.projectsService.rejectInvite(rejectInviteDto, req.user.sub)
   }
 }

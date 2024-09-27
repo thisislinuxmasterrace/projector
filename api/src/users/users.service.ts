@@ -13,7 +13,8 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async create(
     createUserDto: CreateUserDto,
@@ -100,6 +101,10 @@ export class UsersService {
   async findOne(id: number): Promise<Omit<User, 'passwordHash'> | null> {
     return this.prisma.user.findUnique({
       where: { id },
+      include: {
+        invites: { include: { project: true }, omit: { userId: true, projectId: true } },
+        projects: { include: { project: true }, omit: { userId: true, projectId: true } },
+      },
       omit: { passwordHash: true },
     });
   }
