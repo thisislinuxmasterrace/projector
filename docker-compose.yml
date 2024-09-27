@@ -2,42 +2,33 @@ name: projector
 
 services:
   postgres:
-    image: postgis/postgis:16-3.4-alpine
+    image: postgres:16
     restart: unless-stopped
     env_file:
       - .env
     volumes:
       - postgres-volume:/var/lib/postgresql/data
-  msmtpd:
-    image: crazymax/msmtpd
-    container_name: msmtpd
-    ports:
-      - target: 2500
-        published: 2500
-        protocol: tcp
-    env_file:
-      - .env
-    restart: always
   api:
-    image: TODO: GHCR LINK
+    image: ghcr.io/thisislinuxmasterrace/api:latest
     build:
-      context: ./backend/api
+      context: ./api
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
       - postgres
-      - msmtpd
     env_file:
       - .env
-  nginx:
-    restart: unless-stopped
-    image: nginx:1.19-alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.conf.template
-    env_file:
-      - .env
-    ports:
-      - "${NGINX_PORT}:${NGINX_PORT}"
-    depends_on:
-      - api
-      - admin
+#  nginx:
+#    restart: unless-stopped
+#    image: nginx:1.19-alpine
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+#   env_file:
+#      - .env
+#    ports:
+#      - "${NGINX_PORT}:${NGINX_PORT}"
+#    depends_on:
+#      - api
+
+volumes:
+  postgres-volume:
