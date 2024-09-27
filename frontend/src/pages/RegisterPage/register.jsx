@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import './styles.css';
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -11,10 +12,12 @@ const LoginPage = () => {
         const userData = {
             email,
             password,
+            name,
+            surname,
         };
 
         try {
-            const response = await fetch('/auth/login', {
+            const response = await fetch('/users/crud', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,12 +26,13 @@ const LoginPage = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Ошибка при входе в систему');
+                throw new Error('Ошибка при создании пользователя');
             }
 
             const data = await response.json();
-            const jwtToken = data.token;
+            let token = data.token;
             document.cookie = "jwt=" + data.token + "; path=/";
+            alert('Пользователь создан');
         } catch (error) {
             console.error('Ошибка:', error);
         }
@@ -36,8 +40,30 @@ const LoginPage = () => {
 
     return (
         <div className="container">
-            <h2>Вход в систему</h2>
+            <h2>Регистрация</h2>
             <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="name">Имя:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="surname">Фамилия:</label>
+                    <input
+                        type="text"
+                        id="surname"
+                        name="surname"
+                        value={surname}
+                        onChange={(e) => setSurname(e.target.value)}
+                        required
+                    />
+                </div>
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
                     <input
@@ -60,11 +86,11 @@ const LoginPage = () => {
                         required
                     />
                 </div>
-                <button type="submit">Войти</button>
-                <p id="n">Нет аккаунта? <a href="#">Зарегистрироваться</a></p>
+                <button type="submit">Зарегистрироваться</button>
+                <p id="n">Есть аккаунт? <a href="#">Войти</a></p>
             </form>
         </div>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
