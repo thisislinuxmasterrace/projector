@@ -7,12 +7,11 @@ COPY package.json ./
 COPY yarn.lock ./
 COPY prisma ./
 
-RUN yarn install
+RUN yarn install --production --frozen-lockfile
 
 COPY . .
 RUN npx prisma generate
-RUN yarn build
-RUN yarn autoclean --force
+RUN yarn build && yarn autoclean --force
 
 
 
