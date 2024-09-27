@@ -49,10 +49,10 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.0
         with:
-          host: ${{ secrets.SERVER_IP }}  # Your server's IP address
-          username: ${{ secrets.SERVER_USER }}  # Your SSH username
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key
-          port: 22  # Change if your SSH port is different
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
           script: |
             # Pull the latest images
             docker pull ghcr.io/${{ github.repository_owner }}/api:latest
