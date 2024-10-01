@@ -1,15 +1,16 @@
 import "./Header.css";
+import {Link} from "react-router-dom";
 
 const Header = () => {
     return (
         <header className="header">
             <nav className="orange darken-3">
                 <div className="nav-wrapper container">
-                    <a href="#!" className="brand-logo center">Projector</a>
+                    <a className="brand-logo center">Projector</a>
                     <ul className="left hide-on-med-and-down">
-                        <li><a href="sass.html">Sass</a></li>
-                        <li><a href="badges.html">Components</a></li>
-                        <li className="active"><a href="collapsible.html">JavaScript</a></li>
+                        <li><Link to="/">Main</Link></li>
+                        <li><Link to="/projects">Projects</Link></li>
+                        <li><Link to="/profile">Profile</Link></li>
                     </ul>
                 </div>
             </nav>
