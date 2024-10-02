@@ -1,0 +1,8 @@
+{
+  "name": "projector",
+  "scripts": {
+    "client:dev": "npm run start --prefix frontend",
+    "client:build": "npm run build --prefix frontend",
+    "client:install": "npm i --prefix frontend"
+  }
+}
