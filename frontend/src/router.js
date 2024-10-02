@@ -1,6 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import MainPage from "./pages/MainPage/MainPage";
 import UserEditPage from "./pages/UserEditPage/UserEditPage";
+import InvitesPage from "./pages/InvitesPage/InvitesPage";
 
 const router = createBrowserRouter([
     {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
     {
         path: "/profile",
         element: <UserEditPage />
+    },
+    {
+        path: "/invites",
+        element: <InvitesPage />,
     }
 ]);
 
