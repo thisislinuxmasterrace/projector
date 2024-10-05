@@ -7,6 +7,8 @@ COPY package.json ./
 COPY yarn.lock ./
 COPY prisma ./
 
+RUN npm i -g @nestjs/cli
+RUN npm i -g prisma
 RUN yarn install --production --frozen-lockfile
 
 COPY . .
