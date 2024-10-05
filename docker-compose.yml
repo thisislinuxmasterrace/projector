@@ -6,6 +6,8 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-volume:/var/lib/postgresql/data
+    networks:
+      - postgres-network
     env_file:
       - .env
 
@@ -17,6 +19,8 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
+    networks:
+      - postgres-network
     env_file:
       - .env
     
@@ -50,3 +54,7 @@ services:
 volumes:
   postgres-volume:
   frontend-build:
+
+networks:
+  postgres-network:
+    driver: bridge
