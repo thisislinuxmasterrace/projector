@@ -4,18 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
-if (process.env.NODE_ENV != 'production') {
-  dotenv.config({ path: '../.env' });
-} else {
-  console.log(
-    "NODE_ENV=production detected, skipping dotenv init. make sure you didn't forgot to put .env in docker-compose",
-  );
-}
+dotenv.config({ path: '../.env' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('/api')
+  app.setGlobalPrefix('/api');
 
   SwaggerModule.setup(
     'api/documentation',
