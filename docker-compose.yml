@@ -6,10 +6,9 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-volume:/var/lib/postgresql/data
-    networks:
-      - postgres-network
     env_file:
       - .env
+    container_name: projector-postgres
 
   api:
     image: ghcr.io/thisislinuxmasterrace/api:latest
@@ -19,11 +18,10 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-    networks:
-      - postgres-network
     env_file:
       - .env
-    
+    container_name: projector-api
+
   frontend:
     image: ghcr.io/thisislinuxmasterrace/frontend:latest
     build:
@@ -36,6 +34,7 @@ services:
       - api
     env_file:
       - .env
+    container_name: projector-frontend
 
   nginx:
     image: nginx:stable
@@ -50,11 +49,12 @@ services:
       - api
     env_file:
       - .env
+    container_name: projector-nginx
 
 volumes:
   postgres-volume:
   frontend-build:
 
 networks:
-  postgres-network:
+  default:
     driver: bridge
