@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - frontend-build:/usr/share/nginx/html
+      - frontend-build:/app/build
     depends_on:
       - api
     env_file:
