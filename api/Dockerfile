@@ -27,4 +27,4 @@ COPY --from=builder /app/yarn.lock ./
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD [ "npx", "prisma", "migrate", "deploy", "&&", "yarn", "run", "start:prod" ]
+CMD [ "sh", "-c", "npx prisma migrate deploy && yarn run start:prod" ]
