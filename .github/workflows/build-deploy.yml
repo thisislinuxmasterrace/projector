@@ -1,5 +1,3 @@
-name: Build, Push Docker Images, and Deploy
-
 env:
   IMAGE_NAME: ${{ github.repository }}
 
