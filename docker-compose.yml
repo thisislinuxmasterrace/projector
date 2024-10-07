@@ -9,7 +9,6 @@ services:
     env_file:
       - .env
     container_name: projector-postgres
-    restart: unless-stopped
 
   api:
     image: ghcr.io/thisislinuxmasterrace/api:latest
@@ -22,7 +21,6 @@ services:
     env_file:
       - .env
     container_name: projector-api
-    restart: unless-stopped
 
   frontend:
     image: ghcr.io/thisislinuxmasterrace/frontend:latest
@@ -37,7 +35,6 @@ services:
     env_file:
       - .env
     container_name: projector-frontend
-    restart: unless-stopped
 
   nginx:
     image: nginx:stable
@@ -56,7 +53,6 @@ services:
     env_file:
       - .env
     container_name: projector-nginx
-    restart: unless-stopped
 
 volumes:
   postgres-volume:
