@@ -15,12 +15,10 @@ RUN yarn build
 
 
 
-FROM node:22-alpine
+FROM node:22
 
 WORKDIR /app
 ENV NODE_ENV=production
-
-RUN apk update && apk add openssl
 
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
