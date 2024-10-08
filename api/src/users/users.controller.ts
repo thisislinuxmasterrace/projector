@@ -64,22 +64,22 @@ export class UsersController {
     return this.usersService.update(req?.user, updateUserDto);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    example: {
-      id: 2,
-      email: 'archhaze@hotmail.lol',
-      name: 'Dmitry',
-      surname: 'Bel',
-    },
-  })
-  @Delete('me')
-  @ApiOperation({ summary: 'delete currently authorized user' })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  async deleteCurrentUser(@Req() req: any) {
-    return this.usersService.delete(req?.user);
-  }
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   example: {
+  //     id: 2,
+  //     email: 'archhaze@hotmail.lol',
+  //     name: 'Dmitry',
+  //     surname: 'Bel',
+  //   },
+  // })
+  // @Delete('me')
+  // @ApiOperation({ summary: 'delete currently authorized user' })
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard)
+  // async deleteCurrentUser(@Req() req: any) {
+  //   return this.usersService.delete(req?.user);
+  // }
 
   @ApiResponse({
     status: HttpStatus.OK,
