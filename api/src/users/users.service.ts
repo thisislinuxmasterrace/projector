@@ -86,6 +86,7 @@ export class UsersService {
     if (!userJwt) {
       throw new UnauthorizedException();
     }
+    // todo: what to do with projects/tasks? maybe soft-delete?
 
     return this.prisma.user.delete({
       where: { id: userJwt.sub },

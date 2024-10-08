@@ -32,9 +32,11 @@ export class UsersController {
       email: 'archhaze@hotmail.lol',
       name: 'Kirby',
       surname: 'Bel',
+      invites: [],
+      projects: [],
     },
   })
-  @Get('crud')
+  @Get('me')
   @ApiOperation({ summary: 'get currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -51,7 +53,7 @@ export class UsersController {
       surname: 'Bel',
     },
   })
-  @Patch('crud')
+  @Patch('me')
   @ApiOperation({ summary: 'update currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -62,22 +64,22 @@ export class UsersController {
     return this.usersService.update(req?.user, updateUserDto);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    example: {
-      id: 2,
-      email: 'archhaze@hotmail.lol',
-      name: 'Dmitry',
-      surname: 'Bel',
-    },
-  })
-  @Delete('crud')
-  @ApiOperation({ summary: 'delete currently authorized user' })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  async deleteCurrentUser(@Req() req: any) {
-    return this.usersService.delete(req?.user);
-  }
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   example: {
+  //     id: 2,
+  //     email: 'archhaze@hotmail.lol',
+  //     name: 'Dmitry',
+  //     surname: 'Bel',
+  //   },
+  // })
+  // @Delete('me')
+  // @ApiOperation({ summary: 'delete currently authorized user' })
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard)
+  // async deleteCurrentUser(@Req() req: any) {
+  //   return this.usersService.delete(req?.user);
+  // }
 
   @ApiResponse({
     status: HttpStatus.OK,
@@ -88,7 +90,7 @@ export class UsersController {
       surname: 'Bel',
     },
   })
-  @Post('crud')
+  @Post()
   @ApiOperation({ summary: 'creates a new user' })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdateProjectDto {
-  @ApiProperty({ title: 'Id' })
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
-
   @ApiProperty({
     title: 'Name',
     required: false,

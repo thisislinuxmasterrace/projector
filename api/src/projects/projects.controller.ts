@@ -3,9 +3,10 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -14,8 +15,6 @@ import { ProjectsService } from './projects.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateProjectDto } from './dto/updateProject.dto';
-import { ReadProjectDto } from './dto/readProject.dto';
-import { DeleteProjectDto } from './dto/deleteProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
 import { AcceptInviteDto } from './dto/acceptInvite.dto';
 import { RejectInviteDto } from './dto/rejectInvite.dto';
@@ -25,32 +24,36 @@ import { RejectInviteDto } from './dto/rejectInvite.dto';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  @Post('crud')
+  @Post('')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   async create(@Body() createProjectDto: CreateProjectDto, @Req() req: any) {
     return this.projectsService.create(createProjectDto, req.user.sub);
   }
 
-  @Patch('crud')
+  @Patch(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async update(@Body() updateProjectDto: UpdateProjectDto, @Req() req: any) {
-    return this.projectsService.update(updateProjectDto, req.user.sub);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProjectDto: UpdateProjectDto,
+    @Req() req: any,
+  ) {
+    return this.projectsService.update(id, updateProjectDto, req.user.sub);
   }
 
-  @Get('crud')
+  @Get(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async read(@Query() readProjectDto: ReadProjectDto, @Req() req: any) {
-    return this.projectsService.read(readProjectDto, req.user.sub);
+  async read(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.projectsService.read(id, req.user.sub);
   }
 
-  @Delete('crud')
+  @Delete(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async delete(@Body() deleteProjectDto: DeleteProjectDto, @Req() req: any) {
-    return this.projectsService.delete(deleteProjectDto, req.user.sub);
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.projectsService.delete(id, req.user.sub);
   }
 
   @Post('invites/create')
