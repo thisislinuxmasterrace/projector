@@ -32,9 +32,11 @@ export class UsersController {
       email: 'archhaze@hotmail.lol',
       name: 'Kirby',
       surname: 'Bel',
+      invites: [],
+      projects: [],
     },
   })
-  @Get('crud')
+  @Get('me')
   @ApiOperation({ summary: 'get currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -51,7 +53,7 @@ export class UsersController {
       surname: 'Bel',
     },
   })
-  @Patch('crud')
+  @Patch('me')
   @ApiOperation({ summary: 'update currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -71,7 +73,7 @@ export class UsersController {
       surname: 'Bel',
     },
   })
-  @Delete('crud')
+  @Delete('me')
   @ApiOperation({ summary: 'delete currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -88,7 +90,7 @@ export class UsersController {
       surname: 'Bel',
     },
   })
-  @Post('crud')
+  @Post()
   @ApiOperation({ summary: 'creates a new user' })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

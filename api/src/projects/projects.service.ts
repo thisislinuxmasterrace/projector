@@ -6,8 +6,6 @@ import {
 import { CreateProjectDto } from './dto/createProject.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProjectDto } from './dto/updateProject.dto';
-import { ReadProjectDto } from './dto/readProject.dto';
-import { DeleteProjectDto } from './dto/deleteProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
 import { AcceptInviteDto } from './dto/acceptInvite.dto';
 import { RejectInviteDto } from './dto/rejectInvite.dto';
@@ -49,12 +47,16 @@ export class ProjectsService {
     });
   }
 
-  async update(updateProjectDto: UpdateProjectDto, userId: number) {
+  async update(
+    projectId: number,
+    updateProjectDto: UpdateProjectDto,
+    userId: number,
+  ) {
     const userProject = await this.prisma.userProject.findUnique({
       where: {
         userId_projectId: {
           userId,
-          projectId: updateProjectDto.id,
+          projectId,
         },
         role: 'owner',
       },
@@ -65,7 +67,7 @@ export class ProjectsService {
     }
 
     return this.prisma.project.update({
-      where: { id: updateProjectDto.id },
+      where: { id: projectId },
       data: { name: updateProjectDto.name },
       include: {
         users: {
@@ -82,12 +84,12 @@ export class ProjectsService {
     });
   }
 
-  async read(readProjectDto: ReadProjectDto, userId: number) {
+  async read(projectId: number, userId: number) {
     const userProject = await this.prisma.userProject.findUnique({
       where: {
         userId_projectId: {
           userId,
-          projectId: readProjectDto.id,
+          projectId,
         },
       },
     });
@@ -97,7 +99,7 @@ export class ProjectsService {
     }
 
     return this.prisma.project.findUnique({
-      where: { id: readProjectDto.id },
+      where: { id: projectId },
       include: {
         users: {
           include: {
@@ -113,12 +115,12 @@ export class ProjectsService {
     });
   }
 
-  async delete(deleteProjectDto: DeleteProjectDto, userId: number) {
+  async delete(projectId: number, userId: number) {
     const userProject = await this.prisma.userProject.findUnique({
       where: {
         userId_projectId: {
           userId,
-          projectId: deleteProjectDto.id,
+          projectId,
         },
         role: 'owner',
       },
@@ -130,18 +132,18 @@ export class ProjectsService {
 
     return this.prisma.$transaction(async () => {
       await this.prisma.comment.deleteMany({
-        where: { projectId: deleteProjectDto.id },
+        where: { projectId },
       });
       await this.prisma.task.deleteMany({
-        where: { projectId: deleteProjectDto.id },
+        where: { projectId },
       });
       await this.prisma.userProject.deleteMany({
-        where: { projectId: deleteProjectDto.id },
+        where: { projectId },
       });
       await this.prisma.projectInvite.deleteMany({
-        where: { projectId: deleteProjectDto.id },
+        where: { projectId },
       });
-      return this.prisma.project.delete({ where: { id: deleteProjectDto.id } });
+      return this.prisma.project.delete({ where: { id: projectId } });
     });
   }
 
