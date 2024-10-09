@@ -12,6 +12,8 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN npx prisma generate
 RUN yarn build
+RUN rm -rf node_modules
+RUN yarn install --production --frozen-lockfile
 
 
 
