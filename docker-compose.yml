@@ -11,7 +11,7 @@ services:
     container_name: projector-postgres
 
   api:
-    image: ghcr.io/thisislinuxmasterrace/api:latest
+    image: ghcr.io/thisislinuxmasterrace/projector-api:latest
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
     container_name: projector-api
 
   frontend:
-    image: ghcr.io/thisislinuxmasterrace/frontend:latest
+    image: ghcr.io/thisislinuxmasterrace/projector-frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
