@@ -110,6 +110,7 @@ export class UsersService {
           include: { project: true },
           omit: { userId: true, projectId: true },
         },
+        tasks: true,
       },
       omit: { passwordHash: true },
     });
