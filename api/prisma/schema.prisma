@@ -75,6 +75,7 @@ enum Priority {
 }
 
 enum Size {
+  none
   xs
   s
   m
@@ -83,23 +84,24 @@ enum Size {
 }
 
 model Task {
-  id              Int       @id @default(autoincrement())
-  name            String
-  description     String
-  status          Status
-  priority        Priority
-  size            Size
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime?
-  expectedDoneAt  DateTime?
-  doneAt          DateTime?
-  assignedToUsers User[]
-  gitIssue        String?
-  gitPullRequest  String?
-  gitBranch       String?
-  comments        Comment[]
-  project         Project   @relation(fields: [projectId], references: [id])
-  projectId       Int
+  id               Int       @id @default(autoincrement())
+  name             String
+  project          Project   @relation(fields: [projectId], references: [id])
+  projectId        Int
+  description      String?
+  status           Status
+  priority         Priority
+  size             Size
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime?
+  expectedDoneAt   DateTime?
+  doneAt           DateTime?
+  assignedToUser   User?     @relation(fields: [assignedToUserId], references: [id])
+  assignedToUserId Int?
+  gitIssue         String?
+  gitPullRequest   String?
+  gitBranch        String?
+  comments         Comment[]
 }
 
 model Comment {

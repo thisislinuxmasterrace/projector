@@ -111,6 +111,7 @@ export class ProjectsService {
           omit: { projectId: true },
           include: { user: { omit: { passwordHash: true } } },
         },
+        tasks: true,
       },
     });
   }
