@@ -7,7 +7,7 @@ COPY package.json ./
 COPY yarn.lock ./
 COPY prisma ./
 
-RUN yarn install --immutable
+RUN yarn install
 
 COPY . .
 RUN yarn prisma:generate
