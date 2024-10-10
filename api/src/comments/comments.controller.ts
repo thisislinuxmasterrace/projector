@@ -10,12 +10,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/updateComment.dto';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}

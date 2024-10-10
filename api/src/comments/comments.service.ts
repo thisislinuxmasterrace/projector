@@ -6,9 +6,7 @@ import {
 import { CreateCommentDto } from './dto/createComment.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCommentDto } from './dto/updateComment.dto';
-import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('comments')
 @Injectable()
 export class CommentsService {
   constructor(private prisma: PrismaService) {}
