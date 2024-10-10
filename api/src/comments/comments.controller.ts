@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -7,7 +18,7 @@ import { UpdateCommentDto } from './dto/updateComment.dto';
 
 @Controller('comments')
 export class CommentsController {
-  constructor (private readonly commentsService: CommentsService) {}
+  constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
   @UseGuards(AuthGuard)
@@ -19,7 +30,11 @@ export class CommentsController {
   @Patch(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateCommentDto: UpdateCommentDto, @Req() req: any) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Req() req: any,
+  ) {
     return this.commentsService.update(id, updateCommentDto, req.user.sub);
   }
 
