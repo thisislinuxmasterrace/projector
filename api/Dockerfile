@@ -25,7 +25,8 @@ COPY --from=builder /app/dist ./dist
 
 RUN corepack enable && corepack prepare yarn@4.5.0
 RUN yarn workspaces focus --all --production
-RUN yarn prisma:generate
+
+COPY --from=builder /app/node_modules/.prisma/client ./node_modules/.prisma/client
 
 EXPOSE 3000
 CMD [ "sh", "-c", "yarn prisma:migrate:deploy && yarn start:prod" ]
