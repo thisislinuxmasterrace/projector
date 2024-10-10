@@ -10,7 +10,7 @@ COPY prisma ./
 RUN yarn install --immutable
 
 COPY . .
-RUN npx prisma generate
+RUN yarn prisma:generate
 RUN yarn build
 RUN rm -rf node_modules
 RUN yarn install --production --immutable
@@ -29,4 +29,4 @@ COPY --from=builder /app/yarn.lock ./
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD [ "sh", "-c", "npx prisma migrate deploy && node dist/main" ]
+CMD [ "sh", "-c", "yarn prisma:migrate:deploy && yarn start:prod" ]
