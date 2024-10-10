@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "description": "a server side of an open source project management system focused on simplicity",
   "author": "linuxmasterrace",
-  "private": false,
   "license": "AGPL-3.0",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "dotenvx run -f ../.env -- nest start",
     "start:dev": "dotenvx run -f ../.env -- nest start --watch",
     "start:debug": "dotenvx run -f ../.env -- nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -29,9 +28,9 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "prisma": "^5.19.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1",
-    "prisma": "^5.19.1"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^0.10.2",
@@ -75,5 +74,5 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@4.5.0"
 }
