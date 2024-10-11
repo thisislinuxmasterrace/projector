@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 const UserEditPage = () => {
     const [name, setName] = useState("Артём");
     const [surname, setSurname] = useState("Лукичев");
-    const [email, setEmail] = useState("v@z.zov");
+    const [email, setEmail] = useState("artem@gmail.com");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
