@@ -18,6 +18,7 @@ import { UpdateProjectDto } from './dto/updateProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
 import { AcceptInviteDto } from './dto/acceptInvite.dto';
 import { RejectInviteDto } from './dto/rejectInvite.dto';
+import { HasJwt } from '../types/HasJwt';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -27,7 +28,7 @@ export class ProjectsController {
   @Post('')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async create(@Body() createProjectDto: CreateProjectDto, @Req() req: any) {
+  async create(@Body() createProjectDto: CreateProjectDto, @Req() req: HasJwt) {
     return this.projectsService.create(createProjectDto, req.user.sub);
   }
 
@@ -37,7 +38,7 @@ export class ProjectsController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProjectDto: UpdateProjectDto,
-    @Req() req: any,
+    @Req() req: HasJwt,
   ) {
     return this.projectsService.update(id, updateProjectDto, req.user.sub);
   }
@@ -45,14 +46,14 @@ export class ProjectsController {
   @Get(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async read(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+  async read(@Param('id', ParseIntPipe) id: number, @Req() req: HasJwt) {
     return this.projectsService.read(id, req.user.sub);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: HasJwt) {
     return this.projectsService.delete(id, req.user.sub);
   }
 
@@ -61,7 +62,7 @@ export class ProjectsController {
   @ApiBearerAuth()
   async createInvite(
     @Body() createInviteDto: CreateInviteDto,
-    @Req() req: any,
+    @Req() req: HasJwt,
   ) {
     return this.projectsService.createInvite(createInviteDto, req.user.sub);
   }
@@ -71,7 +72,7 @@ export class ProjectsController {
   @ApiBearerAuth()
   async acceptInvite(
     @Body() acceptInviteDto: AcceptInviteDto,
-    @Req() req: any,
+    @Req() req: HasJwt,
   ) {
     return this.projectsService.acceptInvite(acceptInviteDto, req.user.sub);
   }
@@ -81,7 +82,7 @@ export class ProjectsController {
   @ApiBearerAuth()
   async rejectInvite(
     @Body() rejectInviteDto: RejectInviteDto,
-    @Req() req: any,
+    @Req() req: HasJwt,
   ) {
     return this.projectsService.rejectInvite(rejectInviteDto, req.user.sub);
   }

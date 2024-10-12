@@ -18,6 +18,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { HasJwt } from '../types/HasJwt';
 
 @Controller('users')
 @ApiTags('users')
@@ -39,7 +40,7 @@ export class UsersController {
   @ApiOperation({ summary: 'get currently authorized user' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  async getCurrentUser(@Req() req: any) {
+  async getCurrentUser(@Req() req: HasJwt) {
     return this.usersService.findOne(req.user.sub);
   }
 
@@ -57,10 +58,10 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async updateCurrentUser(
-    @Req() req: any,
+    @Req() req: HasJwt,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(req?.user, updateUserDto);
+    return this.usersService.update(req.user.sub, updateUserDto);
   }
 
   // @ApiResponse({
@@ -76,8 +77,8 @@ export class UsersController {
   // @ApiOperation({ summary: 'delete currently authorized user' })
   // @ApiBearerAuth()
   // @UseGuards(AuthGuard)
-  // async deleteCurrentUser(@Req() req: any) {
-  //   return this.usersService.delete(req?.user);
+  // async deleteCurrentUser(@Req() req: HasJwt) {
+  //   return this.usersService.delete(req.user.sub);
   // }
 
   @ApiResponse({

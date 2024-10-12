@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { HasJwt } from '../types/HasJwt';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -47,7 +48,7 @@ export class AuthController {
       exp: 1729781794,
     },
   })
-  getCurrentAuth(@Request() req: any) {
+  getCurrentAuth(@Request() req: HasJwt) {
     return req.user;
   }
 }

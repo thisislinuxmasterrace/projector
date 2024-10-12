@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
@@ -48,13 +47,9 @@ export class UsersService {
   }
 
   async update(
-    userJwt: any,
+    userId: number,
     updateUserDto: UpdateUserDto,
   ): Promise<Omit<User, 'passwordHash'>> {
-    if (!userJwt) {
-      throw new UnauthorizedException();
-    }
-
     const passwordHash = updateUserDto.password
       ? await this.hashPassword(updateUserDto.password)
       : undefined;
@@ -69,7 +64,7 @@ export class UsersService {
     }
 
     return this.prisma.user.update({
-      where: { id: userJwt.sub },
+      where: { id: userId },
       data: {
         passwordHash,
         email: updateUserDto.email,
@@ -82,14 +77,11 @@ export class UsersService {
     });
   }
 
-  async delete(userJwt: any): Promise<Omit<User, 'passwordHash'>> {
-    if (!userJwt) {
-      throw new UnauthorizedException();
-    }
+  async delete(userId: number): Promise<Omit<User, 'passwordHash'>> {
     // todo: what to do with projects/tasks? maybe soft-delete?
 
     return this.prisma.user.delete({
-      where: { id: userJwt.sub },
+      where: { id: userId },
       omit: { passwordHash: true },
     });
   }

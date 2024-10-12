@@ -15,6 +15,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateTaskDto } from './dto/createTask.dto';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/updateTask.dto';
+import { HasJwt } from '../types/HasJwt';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -24,7 +25,7 @@ export class TasksController {
   @Post()
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async create(@Body() createTaskDto: CreateTaskDto, @Req() req: any) {
+  async create(@Body() createTaskDto: CreateTaskDto, @Req() req: HasJwt) {
     return this.tasksService.create(createTaskDto, req.user.sub);
   }
 
@@ -34,7 +35,7 @@ export class TasksController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
-    @Req() req: any,
+    @Req() req: HasJwt,
   ) {
     return this.tasksService.update(id, updateTaskDto, req.user.sub);
   }
@@ -42,14 +43,14 @@ export class TasksController {
   @Delete(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: HasJwt) {
     return this.tasksService.delete(id, req.user.sub);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  async get(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+  async get(@Param('id', ParseIntPipe) id: number, @Req() req: HasJwt) {
     return this.tasksService.get(id, req.user.sub);
   }
 }
