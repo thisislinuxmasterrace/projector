@@ -6,11 +6,12 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-volume:/var/lib/postgresql/data
-    env_file:
-      - .env
     container_name: projector-postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     networks:
-      - shared-network
+      - postgres-network
 
   api:
     image: ghcr.io/thisislinuxmasterrace/projector-api:latest
@@ -20,11 +21,14 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
-    env_file:
-      - .env
     container_name: projector-api
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NODE_ENV=${NODE_ENV}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - shared-network
+      - postgres-network
 
   frontend:
     image: ghcr.io/thisislinuxmasterrace/projector-frontend:latest
@@ -32,37 +36,17 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     restart: unless-stopped
-    volumes:
-      - frontend-build:/app/build
     depends_on:
       - api
-    env_file:
-      - .env
     container_name: projector-frontend
-    networks:
-      - shared-network
-
-  nginx:
-    image: nginx:stable
-    restart: unless-stopped
-    volumes:
-      - ${CERTS_PATH}:/etc/letsencrypt
-      - ${CERTS_DATA_PATH}:/var/lib/letsencrypt
-      - frontend-build:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/templates/default.conf.conf
-    depends_on:
-      - frontend
-      - api
-    env_file:
-      - .env
-    container_name: projector-nginx
     networks:
       - shared-network
 
 volumes:
   postgres-volume:
-  frontend-build:
 
 networks:
   shared-network:
     external: true
+  postgres-network:
+    driver: bridge
