@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Status, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/createUser.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
@@ -12,7 +12,8 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async create(
     createUserDto: CreateUserDto,
@@ -27,8 +28,11 @@ export class UsersService {
           name: createUserDto.name,
           surname: createUserDto.surname,
         },
-        omit: {
-          passwordHash: true,
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          email: true,
         },
       });
     } catch (error) {
@@ -71,8 +75,11 @@ export class UsersService {
         name: updateUserDto.name,
         surname: updateUserDto.surname,
       },
-      omit: {
-        passwordHash: true,
+      select: {
+        id: true,
+        name: true,
+        surname: true,
+        email: true,
       },
     });
   }
@@ -82,29 +89,69 @@ export class UsersService {
 
     return this.prisma.user.delete({
       where: { id: userId },
-      omit: { passwordHash: true },
+      select: {
+        id: true,
+        name: true,
+        surname: true,
+        email: true,
+      },
     });
   }
 
-  async findOneWithPasswordHash(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findOneOnlyPasswordHashAndId(
+    email: string,
+  ): Promise<{ passwordHash: string; id: number } | null> {
+    return this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true, passwordHash: true },
+    });
   }
 
   async findOne(id: number): Promise<Omit<User, 'passwordHash'> | null> {
     return this.prisma.user.findUnique({
       where: { id },
-      include: {
-        invites: {
-          include: { project: true },
-          omit: { userId: true, projectId: true },
-        },
-        projects: {
-          include: { project: true },
-          omit: { userId: true, projectId: true },
-        },
-        tasks: true,
+      select: {
+        id: true,
+        name: true,
+        surname: true,
+        email: true,
       },
-      omit: { passwordHash: true },
+    });
+  }
+
+  async getPendingTasks(id: number) {
+    return this.prisma.task.findMany({
+      where: { assignedToUserId: id, status: { not: Status.done } },
+      select: {
+        id: true,
+        name: true,
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        status: true,
+        priority: true,
+        size: true,
+        createdAt: true,
+        expectedDoneAt: true,
+      },
+      orderBy: [{ expectedDoneAt: 'asc' }, { createdAt: 'asc' }],
+    });
+  }
+
+  async getProjects(id: number) {
+    return (await this.prisma.userProject.findMany({
+      where: { userId: id },
+      select: { project: { select: { id: true, name: true } }, role: true },
+    })).map(relation => relation.project);
+  }
+
+  async getInvites(id: number) {
+    return this.prisma.projectInvite.findMany({
+      where: { userId: id },
+      select: { id: true, project: { select: { id: true, name: true } }, role: true },
     });
   }
 
