@@ -9,7 +9,6 @@ import { UpdateProjectDto } from './dto/updateProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
 import { AcceptInviteDto } from './dto/acceptInvite.dto';
 import { RejectInviteDto } from './dto/rejectInvite.dto';
-import { Status } from '@prisma/client';
 
 @Injectable()
 export class ProjectsService {
