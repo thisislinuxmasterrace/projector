@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<string> {
-    const user = await this.usersService.findOneWithPasswordHash(
+    const user = await this.usersService.findOneOnlyPasswordHashAndId(
       signInDto.email,
     );
 
