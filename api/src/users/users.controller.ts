@@ -94,7 +94,7 @@ export class UsersController {
       },
     ],
   })
-  @ApiOperation({ summary: 'Get pending tasks assigned to user. Sorted by expectedDoneAt (ascending) and createdAt (descending)).' })
+  @ApiOperation({ summary: 'Get pending tasks assigned to user. Sorted by expectedDoneAt (ascending) and createdAt (descending).' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async getCurrentUserPendingTasks(@Req() req: HasJwt) {

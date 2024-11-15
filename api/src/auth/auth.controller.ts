@@ -31,7 +31,7 @@ export class AuthController {
     example:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXJuYW1lIjoic3RyaW5nIiwiaWF0IjoxNzI3MTg5ODY5LCJleHAiOjE3Mjk3ODE4Njl9.TqvSSdzE9YCFownWUH38hcPgYcuEF1ztv4Wyt7nO_iI',
   })
-  @ApiOperation({ summary: 'login and get jwt token' })
+  @ApiOperation({ summary: 'Login and get jwt token.' })
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
@@ -39,7 +39,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('current')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'get current jwt info' })
+  @ApiOperation({ summary: 'Get current jwt info.' })
   @ApiResponse({
     status: HttpStatus.OK,
     example: {
