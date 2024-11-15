@@ -1,6 +1,6 @@
 import {
   BadRequestException,
-  Injectable,
+  Injectable, NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/createProject.dto';
@@ -12,38 +12,21 @@ import { RejectInviteDto } from './dto/rejectInvite.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {
+  }
 
   async create(createProjectDto: CreateProjectDto, userId: number) {
-    // eslint-disable-next-line
-    const user = await this.prisma.user.findFirstOrThrow({
-      where: { id: userId },
-    });
-
     return this.prisma.$transaction(async () => {
       const project = await this.prisma.project.create({
         data: { name: createProjectDto.name },
+        select: { id: true, name: true },
       });
 
       await this.prisma.userProject.create({
         data: { projectId: project.id, userId, role: 'owner' },
       });
 
-      return this.prisma.project.findUnique({
-        where: { id: project.id },
-        include: {
-          users: {
-            include: {
-              user: { omit: { passwordHash: true } },
-            },
-            omit: { userId: true, projectId: true },
-          },
-          invites: {
-            omit: { projectId: true },
-            include: { user: { omit: { passwordHash: true } } },
-          },
-        },
-      });
+      return project;
     });
   }
 
@@ -69,18 +52,7 @@ export class ProjectsService {
     return this.prisma.project.update({
       where: { id: projectId },
       data: { name: updateProjectDto.name },
-      include: {
-        users: {
-          include: {
-            user: { omit: { passwordHash: true } },
-          },
-          omit: { userId: true, projectId: true },
-        },
-        invites: {
-          omit: { projectId: true },
-          include: { user: { omit: { passwordHash: true } } },
-        },
-      },
+      select: { id: true, name: true },
     });
   }
 
@@ -100,19 +72,7 @@ export class ProjectsService {
 
     return this.prisma.project.findUnique({
       where: { id: projectId },
-      include: {
-        users: {
-          include: {
-            user: { omit: { passwordHash: true } },
-          },
-          omit: { userId: true, projectId: true },
-        },
-        invites: {
-          omit: { projectId: true },
-          include: { user: { omit: { passwordHash: true } } },
-        },
-        tasks: true,
-      },
+      select: { id: true, name: true },
     });
   }
 
@@ -144,7 +104,7 @@ export class ProjectsService {
       await this.prisma.projectInvite.deleteMany({
         where: { projectId },
       });
-      return this.prisma.project.delete({ where: { id: projectId } });
+      return this.prisma.project.delete({ where: { id: projectId }, select: { id: true, name: true } });
     });
   }
 
@@ -175,7 +135,15 @@ export class ProjectsService {
     });
 
     if (!invitedUser) {
-      throw new BadRequestException('no such user');
+      throw new NotFoundException('no such user');
+    }
+
+    const existingInvite = await this.prisma.projectInvite.findFirst({
+      where: { projectId: userProject.projectId, userId: invitedUser.id },
+    });
+
+    if (existingInvite) {
+      throw new BadRequestException('invite already exists');
     }
 
     return this.prisma.projectInvite.create({
@@ -183,6 +151,12 @@ export class ProjectsService {
         projectId: createInviteDto.projectId,
         userId: invitedUser.id,
         role: createInviteDto.role,
+      },
+      select: {
+        id: true,
+        project: { select: { id: true, name: true } },
+        user: { select: { email: true } },
+        role: true,
       },
     });
   }
@@ -192,12 +166,12 @@ export class ProjectsService {
       where: { id: acceptInviteDto.inviteId },
     });
     if (!invite) {
-      throw new BadRequestException('no such invite');
+      throw new NotFoundException('no such invite');
     }
 
     if (invite.userId !== userId) {
       throw new UnauthorizedException(
-        "invite not found or user don't have permissions to accept it",
+        'user don\'t have permissions to accept this invite',
       );
     }
 
@@ -213,19 +187,8 @@ export class ProjectsService {
       await this.prisma.projectInvite.delete({ where: { id: invite.id } });
 
       return this.prisma.project.findUnique({
-        where: { id: invite.id },
-        include: {
-          users: {
-            include: {
-              user: { omit: { passwordHash: true } },
-            },
-            omit: { userId: true, projectId: true },
-          },
-          invites: {
-            omit: { projectId: true },
-            include: { user: { omit: { passwordHash: true } } },
-          },
-        },
+        where: { id: invite.projectId },
+        select: { id: true, name: true },
       });
     });
   }
@@ -244,6 +207,78 @@ export class ProjectsService {
 
     return this.prisma.projectInvite.delete({
       where: { id: rejectInviteDto.inviteId },
+      select: { id: true, project: { select: { id: true, name: true } }, role: true },
+    });
+  }
+
+  async getTasks(userId: number, projectId: number) {
+    const userProject = await this.prisma.userProject.findUnique({
+      where: {
+        userId_projectId: {
+          userId,
+          projectId,
+        },
+      },
+    });
+
+    if (!userProject) {
+      throw new UnauthorizedException('not enough permissions');
+    }
+
+    return this.prisma.task.findMany({
+      where: { projectId },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        priority: true,
+        size: true,
+        expectedDoneAt: true,
+      },
+    });
+  }
+
+  async getUsers(userId: number, projectId: number) {
+    const userProject = await this.prisma.userProject.findUnique({
+      where: {
+        userId_projectId: {
+          userId,
+          projectId,
+        },
+      },
+    });
+
+    if (!userProject) {
+      throw new UnauthorizedException('not enough permissions');
+    }
+
+    return this.prisma.userProject.findMany({
+      where: { projectId },
+      select: { user: { select: { id: true, name: true, surname: true, email: true } }, role: true },
+    });
+  }
+
+  async getInvites(userId: number, projectId: number) {
+    const userProject = await this.prisma.userProject.findUnique({
+      where: {
+        userId_projectId: {
+          userId,
+          projectId,
+        },
+        role: 'owner',
+      },
+    });
+
+    if (!userProject) {
+      throw new UnauthorizedException('not enough permissions');
+    }
+
+    return this.prisma.projectInvite.findMany({
+      where: { projectId }, select: {
+        id: true,
+        user: { select: { email: true } },
+        role: true,
+      },
     });
   }
 }
