@@ -300,4 +300,62 @@ export class ProjectsService {
       },
     });
   }
+
+  async deleteUserFromProject(
+    userId: number,
+    projectId: number,
+    initiatorId: number,
+  ) {
+    if (userId !== initiatorId) {
+      const userProject = await this.prisma.userProject.findUnique({
+        where: {
+          userId_projectId: {
+            userId: initiatorId,
+            projectId,
+          },
+          role: 'owner',
+        },
+      });
+
+      if (!userProject) {
+        throw new UnauthorizedException('not enough permissions');
+      }
+    }
+
+    const userProject = await this.prisma.userProject.findUnique({
+      where: {
+        userId_projectId: {
+          userId,
+          projectId,
+        },
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+          },
+        },
+        role: true,
+      },
+    });
+
+    if (!userProject) {
+      throw new BadRequestException('no such user in project');
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.task.updateMany({
+        where: { projectId, assignedToUserId: userId },
+        data: { assignedToUserId: null },
+      }),
+      this.prisma.userProject.delete({
+        where: { userId_projectId: { userId, projectId } },
+      }),
+    ]);
+
+    return userProject;
+  }
 }

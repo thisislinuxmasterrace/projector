@@ -270,4 +270,34 @@ export class ProjectsController {
   ) {
     return this.projectsService.getInvites(req.user.sub, projectId);
   }
+
+  @Delete(':id/users/:userId')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Remove user from project. Can also be used to leave project.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    example: {
+      user: {
+        id: 3,
+        name: 'Kirill',
+        surname: 'Belolipetsky',
+        email: 'kirill@gmail.com',
+      },
+      role: 'maintainer',
+    },
+  })
+  async deleteUserFromProject(
+    @Param('id', ParseIntPipe) projectId: number,
+    @Req() req: HasJwt,
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.projectsService.deleteUserFromProject(
+      userId,
+      projectId,
+      req.user.sub,
+    );
+  }
 }
