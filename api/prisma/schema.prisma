@@ -59,6 +59,8 @@ model ProjectInvite {
   userId    Int
   projectId Int
   role      Role
+
+  @@unique([projectId, userId])
 }
 
 enum Status {
@@ -98,9 +100,6 @@ model Task {
   doneAt           DateTime?
   assignedToUser   User?     @relation(fields: [assignedToUserId], references: [id])
   assignedToUserId Int?
-  gitIssue         String?
-  gitPullRequest   String?
-  gitBranch        String?
   comments         Comment[]
 }
 
