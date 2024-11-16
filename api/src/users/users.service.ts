@@ -12,7 +12,8 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async create(
     createUserDto: CreateUserDto,
@@ -141,12 +142,10 @@ export class UsersService {
   }
 
   async getProjects(id: number) {
-    return (
-      await this.prisma.userProject.findMany({
-        where: { userId: id },
-        select: { project: { select: { id: true, name: true } }, role: true },
-      })
-    ).map((relation) => relation.project);
+    return this.prisma.userProject.findMany({
+      where: { userId: id },
+      select: { project: { select: { id: true, name: true } }, role: true },
+    });
   }
 
   async getInvites(id: number) {

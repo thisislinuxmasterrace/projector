@@ -23,7 +23,8 @@ import { HasJwt } from '../types/HasJwt';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {
+  }
 
   @ApiResponse({
     status: HttpStatus.OK,
@@ -48,12 +49,18 @@ export class UsersController {
     status: HttpStatus.OK,
     example: [
       {
-        id: 4,
-        name: 'Projector',
+        'project': {
+          'id': 4,
+          'name': 'Projector',
+        },
+        'role': 'owner',
       },
       {
-        id: 5,
-        name: 'NestJS',
+        'project': {
+          'id': 8,
+          'name': 'NestJS',
+        },
+        'role': 'maintainer',
       },
     ],
   })
