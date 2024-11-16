@@ -5,7 +5,6 @@ import {
   IsISO8601,
   IsNotEmpty,
   IsOptional,
-  IsUrl,
 } from 'class-validator';
 import { Priority, Size, Status } from '@prisma/client';
 
@@ -70,19 +69,4 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsInt()
   assignedToUserId: number;
-
-  @ApiProperty({ title: 'Git issue link', required: false })
-  @IsOptional()
-  @IsUrl()
-  gitIssue: string;
-
-  @ApiProperty({ title: 'Git pull request link', required: false })
-  @IsOptional()
-  @IsUrl()
-  gitPullRequest: string;
-
-  @ApiProperty({ title: 'Git branch name', required: false })
-  @IsOptional()
-  @IsNotEmpty()
-  gitBranch: string;
 }
