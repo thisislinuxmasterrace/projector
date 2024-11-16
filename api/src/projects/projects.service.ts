@@ -234,6 +234,14 @@ export class ProjectsService {
         priority: true,
         size: true,
         expectedDoneAt: true,
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true
+          }
+        }
       },
     });
   }

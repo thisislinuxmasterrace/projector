@@ -169,6 +169,12 @@ export class ProjectsController {
         'priority': 'medium',
         'size': 'xl',
         'expectedDoneAt': '2024-11-15T20:22:56.000Z',
+        'assignedToUser': {
+          'id': 3,
+          'name': 'Kirill',
+          'surname': 'Belolipetsky',
+          'email': 'archhaze24@gmail.com',
+        },
       },
       {
         'id': 20,
@@ -177,6 +183,7 @@ export class ProjectsController {
         'priority': 'none',
         'size': 'none',
         'expectedDoneAt': null,
+        'assignedToUser': null,
       },
     ],
   })
