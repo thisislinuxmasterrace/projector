@@ -13,7 +13,8 @@ import { RejectInviteDto } from './dto/rejectInvite.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {
+  }
 
   async create(createProjectDto: CreateProjectDto, userId: number) {
     return this.prisma.$transaction(async () => {
@@ -149,6 +150,18 @@ export class ProjectsService {
       throw new BadRequestException('invite already exists');
     }
 
+    const userInProject = await this.prisma.userProject.findUnique({
+      where: {
+        userId_projectId: {
+          userId: invitedUser.id, projectId: createInviteDto.projectId,
+        },
+      },
+    });
+
+    if (userInProject) {
+      throw new BadRequestException('user is already in project')
+    }
+
     return this.prisma.projectInvite.create({
       data: {
         projectId: createInviteDto.projectId,
@@ -174,7 +187,7 @@ export class ProjectsService {
 
     if (invite.userId !== userId) {
       throw new UnauthorizedException(
-        "user don't have permissions to accept this invite",
+        'user don\'t have permissions to accept this invite',
       );
     }
 
