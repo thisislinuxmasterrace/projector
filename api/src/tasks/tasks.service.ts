@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/createTask.dto';
@@ -47,11 +48,46 @@ export class TasksService {
 
     return this.prisma.task.create({
       data: { ...createTaskDto, doneAt },
-      include: {
-        assignedToUser: { omit: { passwordHash: true } },
+      select: {
+        id: true,
+        name: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        description: true,
+        status: true,
+        priority: true,
+        size: true,
+        createdAt: true,
+        updatedAt: true,
+        expectedDoneAt: true,
+        doneAt: true,
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+          },
+        },
         comments: {
-          include: { user: { omit: { passwordHash: true } } },
-          omit: { userId: true, projectId: true, taskId: true },
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                surname: true,
+                email: true,
+              },
+            },
+            createdAt: true,
+            updatedAt: true,
+            content: true,
+          },
         },
       },
     });
@@ -61,7 +97,7 @@ export class TasksService {
     const task = await this.prisma.task.findUnique({ where: { id: taskId } });
 
     if (!task) {
-      throw new BadRequestException('no such task');
+      throw new NotFoundException('no such task');
     }
 
     const membership = await this.prisma.userProject.findUnique({
@@ -100,11 +136,46 @@ export class TasksService {
     return this.prisma.task.update({
       where: { id: task.id },
       data: { ...updateTaskDto, doneAt },
-      include: {
-        assignedToUser: { omit: { passwordHash: true } },
+      select: {
+        id: true,
+        name: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        description: true,
+        status: true,
+        priority: true,
+        size: true,
+        createdAt: true,
+        updatedAt: true,
+        expectedDoneAt: true,
+        doneAt: true,
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+          },
+        },
         comments: {
-          include: { user: { omit: { passwordHash: true } } },
-          omit: { userId: true, projectId: true, taskId: true },
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                surname: true,
+                email: true,
+              },
+            },
+            createdAt: true,
+            updatedAt: true,
+            content: true,
+          },
         },
       },
     });
@@ -114,7 +185,7 @@ export class TasksService {
     const task = await this.prisma.task.findUnique({ where: { id: taskId } });
 
     if (!task) {
-      throw new BadRequestException('no such task');
+      throw new NotFoundException('no such task');
     }
 
     const membership = await this.prisma.userProject.findUnique({
@@ -131,34 +202,160 @@ export class TasksService {
     }
 
     return this.prisma.$transaction(async () => {
+      const taskWithComments = await this.prisma.task.findUnique({
+        where: { id: taskId },
+        select: {
+          id: true,
+          name: true,
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          description: true,
+          status: true,
+          priority: true,
+          size: true,
+          createdAt: true,
+          updatedAt: true,
+          expectedDoneAt: true,
+          doneAt: true,
+          assignedToUser: {
+            select: {
+              id: true,
+              name: true,
+              surname: true,
+              email: true,
+            },
+          },
+          comments: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  surname: true,
+                  email: true,
+                },
+              },
+              createdAt: true,
+              updatedAt: true,
+              content: true,
+            },
+          },
+        },
+      });
+
       await this.prisma.comment.deleteMany({ where: { taskId } });
 
-      return this.prisma.task.delete({ where: { id: taskId } });
+      await this.prisma.task.delete({
+        where: { id: taskId },
+        select: {
+          id: true,
+          name: true,
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          description: true,
+          status: true,
+          priority: true,
+          size: true,
+          createdAt: true,
+          updatedAt: true,
+          expectedDoneAt: true,
+          doneAt: true,
+          assignedToUser: {
+            select: {
+              id: true,
+              name: true,
+              surname: true,
+              email: true,
+            },
+          },
+          comments: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  surname: true,
+                  email: true,
+                },
+              },
+              createdAt: true,
+              updatedAt: true,
+              content: true,
+            },
+          },
+        },
+      });
+
+      return taskWithComments;
     });
   }
 
   async get(taskId: number, userId: number) {
     const task = await this.prisma.task.findUnique({
       where: { id: taskId },
-      include: {
-        assignedToUser: { omit: { passwordHash: true } },
-        comments: {
-          include: { user: { omit: { passwordHash: true } } },
-          omit: { userId: true, projectId: true, taskId: true },
+      select: {
+        id: true,
+        name: true,
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
-        project: true,
+        description: true,
+        status: true,
+        priority: true,
+        size: true,
+        createdAt: true,
+        updatedAt: true,
+        expectedDoneAt: true,
+        doneAt: true,
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                surname: true,
+                email: true,
+              },
+            },
+            createdAt: true,
+            updatedAt: true,
+            content: true,
+          },
+        },
       },
     });
 
     if (!task) {
-      throw new BadRequestException('no such task');
+      throw new NotFoundException('no such task');
     }
 
     const membership = await this.prisma.userProject.findUnique({
       where: {
         userId_projectId: {
           userId,
-          projectId: task.projectId,
+          projectId: task.project.id,
         },
       },
     });

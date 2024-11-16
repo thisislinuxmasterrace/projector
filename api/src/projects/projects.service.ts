@@ -1,6 +1,7 @@
 import {
   BadRequestException,
-  Injectable, NotFoundException,
+  Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/createProject.dto';
@@ -12,8 +13,7 @@ import { RejectInviteDto } from './dto/rejectInvite.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createProjectDto: CreateProjectDto, userId: number) {
     return this.prisma.$transaction(async () => {
@@ -104,7 +104,10 @@ export class ProjectsService {
       await this.prisma.projectInvite.deleteMany({
         where: { projectId },
       });
-      return this.prisma.project.delete({ where: { id: projectId }, select: { id: true, name: true } });
+      return this.prisma.project.delete({
+        where: { id: projectId },
+        select: { id: true, name: true },
+      });
     });
   }
 
@@ -171,7 +174,7 @@ export class ProjectsService {
 
     if (invite.userId !== userId) {
       throw new UnauthorizedException(
-        'user don\'t have permissions to accept this invite',
+        "user don't have permissions to accept this invite",
       );
     }
 
@@ -207,7 +210,11 @@ export class ProjectsService {
 
     return this.prisma.projectInvite.delete({
       where: { id: rejectInviteDto.inviteId },
-      select: { id: true, project: { select: { id: true, name: true } }, role: true },
+      select: {
+        id: true,
+        project: { select: { id: true, name: true } },
+        role: true,
+      },
     });
   }
 
@@ -239,9 +246,9 @@ export class ProjectsService {
             id: true,
             name: true,
             surname: true,
-            email: true
-          }
-        }
+            email: true,
+          },
+        },
       },
     });
   }
@@ -262,7 +269,10 @@ export class ProjectsService {
 
     return this.prisma.userProject.findMany({
       where: { projectId },
-      select: { user: { select: { id: true, name: true, surname: true, email: true } }, role: true },
+      select: {
+        user: { select: { id: true, name: true, surname: true, email: true } },
+        role: true,
+      },
     });
   }
 
@@ -282,7 +292,8 @@ export class ProjectsService {
     }
 
     return this.prisma.projectInvite.findMany({
-      where: { projectId }, select: {
+      where: { projectId },
+      select: {
         id: true,
         user: { select: { email: true } },
         role: true,

@@ -23,8 +23,7 @@ import { HasJwt } from '../types/HasJwt';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @ApiResponse({
     status: HttpStatus.OK,
@@ -46,14 +45,15 @@ export class UsersController {
   @Get('me/projects')
   @ApiOperation({ summary: 'Get projects that current user is on.' })
   @ApiResponse({
-    status: HttpStatus.OK, example: [
+    status: HttpStatus.OK,
+    example: [
       {
-        'id': 4,
-        'name': 'Projector',
+        id: 4,
+        name: 'Projector',
       },
       {
-        'id': 5,
-        'name': 'NestJS',
+        id: 5,
+        name: 'NestJS',
       },
     ],
   })
@@ -65,36 +65,40 @@ export class UsersController {
 
   @Get('me/pending-tasks')
   @ApiResponse({
-    status: HttpStatus.OK, example: [
+    status: HttpStatus.OK,
+    example: [
       {
-        'id': 15,
-        'name': 'Main page',
-        'project': {
-          'id': 4,
-          'name': 'Projector',
+        id: 15,
+        name: 'Main page',
+        project: {
+          id: 4,
+          name: 'Projector',
         },
-        'status': 'inProgress',
-        'priority': 'medium',
-        'size': 'xl',
-        'createdAt': '2024-11-15T19:01:31.577Z',
-        'expectedDoneAt': '2024-11-15T18:58:44.000Z',
+        status: 'inProgress',
+        priority: 'medium',
+        size: 'xl',
+        createdAt: '2024-11-15T19:01:31.577Z',
+        expectedDoneAt: '2024-11-15T18:58:44.000Z',
       },
       {
-        'id': 17,
-        'name': 'User login page',
-        'project': {
-          'id': 4,
-          'name': 'Projector',
+        id: 17,
+        name: 'User login page',
+        project: {
+          id: 4,
+          name: 'Projector',
         },
-        'status': 'todo',
-        'priority': 'none',
-        'size': 'none',
-        'createdAt': '2024-11-15T19:01:36.658Z',
-        'expectedDoneAt': null,
+        status: 'todo',
+        priority: 'none',
+        size: 'none',
+        createdAt: '2024-11-15T19:01:36.658Z',
+        expectedDoneAt: null,
       },
     ],
   })
-  @ApiOperation({ summary: 'Get pending tasks assigned to user. Sorted by expectedDoneAt (ascending) and createdAt (descending).' })
+  @ApiOperation({
+    summary:
+      'Get pending tasks assigned to user. Sorted by expectedDoneAt (ascending) and createdAt (descending).',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async getCurrentUserPendingTasks(@Req() req: HasJwt) {
@@ -103,22 +107,23 @@ export class UsersController {
 
   @Get('me/invites')
   @ApiResponse({
-    status: HttpStatus.OK, example: [
+    status: HttpStatus.OK,
+    example: [
       {
-        'id': 2,
-        'project': {
-          'id': 6,
-          'name': 'Projector',
+        id: 2,
+        project: {
+          id: 6,
+          name: 'Projector',
         },
-        'role': 'owner',
+        role: 'owner',
       },
       {
-        'id': 3,
-        'project': {
-          'id': 4,
-          'name': 'NestJS',
+        id: 3,
+        project: {
+          id: 4,
+          name: 'NestJS',
         },
-        'role': 'maintainer',
+        role: 'maintainer',
       },
     ],
   })
