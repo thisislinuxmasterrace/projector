@@ -203,13 +203,10 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     example: {
-      id: 8,
+      id: 14,
       project: {
-        id: 9,
+        id: 12,
         name: 'Projector',
-      },
-      user: {
-        email: 'kirillbelolipetsky@gmail.com',
       },
       role: 'maintainer',
     },

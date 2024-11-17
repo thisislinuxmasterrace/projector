@@ -170,11 +170,13 @@ export class UsersService {
         },
       });
 
-      await this.prisma.projectInvite.delete({ where: { id: invite.id } });
-
-      return this.prisma.project.findUnique({
-        where: { id: invite.projectId },
-        select: { id: true, name: true },
+      return this.prisma.projectInvite.delete({
+        where: { id: invite.id },
+        select: {
+          id: true,
+          project: { select: { id: true, name: true } },
+          role: true,
+        },
       });
     });
   }
