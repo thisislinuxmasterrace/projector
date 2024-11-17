@@ -4,27 +4,29 @@ import UserEditPage from "./pages/UserEditPage/UserEditPage";
 import InvitesPage from "./pages/InvitesPage/InvitesPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import PublicOnlyRoute from "./components/PublicOnlyRoute/PublicOnlyRoute";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <MainPage />,
+        element: <PrivateRoute element={<MainPage />} />
     },
     {
         path: "/profile",
-        element: <UserEditPage />
+        element: <PrivateRoute element={<UserEditPage />} />
     },
     {
         path: "/invites",
-        element: <InvitesPage />,
+        element: <PrivateRoute element={<InvitesPage />} />
     },
     {
         path: "/register",
-        element: <RegisterPage />
+        element: <PublicOnlyRoute element={<RegisterPage />} />
     },
     {
         path: "/login",
-        element: <LoginPage />
+        element: <PublicOnlyRoute element={<LoginPage />} />
     }
 ]);
 

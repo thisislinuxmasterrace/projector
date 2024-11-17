@@ -1,8 +1,14 @@
 import {useState} from "react";
 import AuthForm from "../../components/AuthForm/AuthForm";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {login as loginService, register} from "../../services/auth.service";
+import {useAuth} from "../../providers/auth.provider";
 
 const RegisterPage = () => {
+    const navigate = useNavigate();
+
+    const {login} = useAuth();
+
     const [inputs, setInputs] = useState([
         {name: "name", type: "text", value: ""},
         {name: "surname", type: "text", value: ""},
@@ -17,13 +23,28 @@ const RegisterPage = () => {
         setInputs(inputsCopy);
     };
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
+
+        const requestData = {};
+
+        inputs.forEach((el, i) => requestData[el.name] = el.value);
+
+        try {
+            const registerData = await register(requestData.name, requestData.surname, requestData.email, requestData.password);
+            if(registerData.id) {
+                const token = await loginService(requestData.email, requestData.password);
+                login(token);
+                navigate("/");
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
         <div className="row">
-            <div className="col s4 offset-s4">
+            <div className="col s4 offset-s4 card" style={{marginTop: 100, paddingTop: 10}}>
                 <div className="page-title mb-0">
                     Регистрация
                 </div>
