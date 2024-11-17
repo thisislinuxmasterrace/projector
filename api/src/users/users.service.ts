@@ -1,7 +1,8 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
-  InternalServerErrorException,
+  InternalServerErrorException, NotFoundException, UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Status, User } from '@prisma/client';
@@ -150,6 +151,60 @@ export class UsersService {
   async getInvites(id: number) {
     return this.prisma.projectInvite.findMany({
       where: { userId: id },
+      select: {
+        id: true,
+        project: { select: { id: true, name: true } },
+        role: true,
+      },
+    });
+  }
+
+  async acceptInvite(inviteId: number, userId: number) {
+    const invite = await this.prisma.projectInvite.findUnique({
+      where: { id: inviteId },
+    });
+    if (!invite) {
+      throw new NotFoundException('no such invite');
+    }
+
+    if (invite.userId !== userId) {
+      throw new UnauthorizedException(
+        "user don't have permissions to accept this invite",
+      );
+    }
+
+    return this.prisma.$transaction(async () => {
+      await this.prisma.userProject.create({
+        data: {
+          userId: invite.userId,
+          projectId: invite.projectId,
+          role: invite.role,
+        },
+      });
+
+      await this.prisma.projectInvite.delete({ where: { id: invite.id } });
+
+      return this.prisma.project.findUnique({
+        where: { id: invite.projectId },
+        select: { id: true, name: true },
+      });
+    });
+  }
+
+  async rejectInvite(inviteId: number, userId: number) {
+    const invite = await this.prisma.projectInvite.findUnique({
+      where: { id: inviteId },
+    });
+    if (!invite) {
+      throw new BadRequestException('no such invite');
+    }
+
+    if (invite.userId !== userId) {
+      throw new UnauthorizedException('not enough permissions');
+    }
+
+    return this.prisma.projectInvite.delete({
+      where: { id: inviteId },
       select: {
         id: true,
         project: { select: { id: true, name: true } },

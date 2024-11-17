@@ -1,8 +1,8 @@
 import {
   Body,
-  Controller,
-  Get,
-  HttpStatus,
+  Controller, Delete,
+  Get, HttpCode,
+  HttpStatus, Param, ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -23,7 +23,8 @@ import { HasJwt } from '../types/HasJwt';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {
+  }
 
   @ApiResponse({
     status: HttpStatus.OK,
@@ -190,5 +191,53 @@ export class UsersController {
   @ApiOperation({ summary: 'Creates a new user.' })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('me/invites/:id/accept')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    example: {
+      id: 8,
+      project: {
+        id: 9,
+        name: 'Projector',
+      },
+      user: {
+        email: 'kirillbelolipetsky@gmail.com',
+      },
+      role: 'maintainer',
+    },
+  })
+  @ApiOperation({ summary: 'Accept invite to project.' })
+  async acceptInvite(
+    @Param('id', ParseIntPipe) inviteId: number,
+    @Req() req: HasJwt,
+  ) {
+    return this.usersService.acceptInvite(inviteId, req.user.sub);
+  }
+
+  @Delete('me/invites/:id/reject')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    example: {
+      id: 4,
+      project: {
+        id: 6,
+        name: 'Projector',
+      },
+      role: 'owner',
+    },
+  })
+  @ApiOperation({ summary: 'Reject invite to project.' })
+  async rejectInvite(
+    @Param('id', ParseIntPipe) inviteId: number,
+    @Req() req: HasJwt,
+  ) {
+    return this.usersService.rejectInvite(inviteId, req.user.sub);
   }
 }

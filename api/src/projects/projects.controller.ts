@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -23,8 +22,6 @@ import {
 } from '@nestjs/swagger';
 import { UpdateProjectDto } from './dto/updateProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
-import { AcceptInviteDto } from './dto/acceptInvite.dto';
-import { RejectInviteDto } from './dto/rejectInvite.dto';
 import { HasJwt } from '../types/HasJwt';
 
 @ApiTags('projects')
@@ -96,81 +93,7 @@ export class ProjectsController {
     return this.projectsService.delete(id, req.user.sub);
   }
 
-  @Post('invites/create')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    example: {
-      id: 7,
-      project: {
-        id: 5,
-        name: 'projector',
-      },
-      user: {
-        email: 'kirillbelolipetsky@gmail.com',
-      },
-      role: 'owner',
-    },
-  })
-  @ApiOperation({
-    summary:
-      'Create invite to project. You need to be project owner in order to use this endpoint.',
-  })
-  async createInvite(
-    @Body() createInviteDto: CreateInviteDto,
-    @Req() req: HasJwt,
-  ) {
-    return this.projectsService.createInvite(createInviteDto, req.user.sub);
-  }
 
-  @Post('invites/accept')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    example: {
-      id: 8,
-      project: {
-        id: 9,
-        name: 'Projector',
-      },
-      user: {
-        email: 'kirillbelolipetsky@gmail.com',
-      },
-      role: 'maintainer',
-    },
-  })
-  @ApiOperation({ summary: 'Accept invite to project.' })
-  async acceptInvite(
-    @Body() acceptInviteDto: AcceptInviteDto,
-    @Req() req: HasJwt,
-  ) {
-    return this.projectsService.acceptInvite(acceptInviteDto, req.user.sub);
-  }
-
-  @Delete('invites/reject')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    example: {
-      id: 4,
-      project: {
-        id: 6,
-        name: 'Projector',
-      },
-      role: 'owner',
-    },
-  })
-  @ApiOperation({ summary: 'Reject invite to project.' })
-  async rejectInvite(
-    @Body() rejectInviteDto: RejectInviteDto,
-    @Req() req: HasJwt,
-  ) {
-    return this.projectsService.rejectInvite(rejectInviteDto, req.user.sub);
-  }
 
   @Get(':id/tasks')
   @UseGuards(AuthGuard)
@@ -243,6 +166,35 @@ export class ProjectsController {
     @Req() req: HasJwt,
   ) {
     return this.projectsService.getUsers(req.user.sub, projectId);
+  }
+
+  @Post(':id/invites')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    example: {
+      id: 7,
+      project: {
+        id: 5,
+        name: 'projector',
+      },
+      user: {
+        email: 'kirillbelolipetsky@gmail.com',
+      },
+      role: 'owner',
+    },
+  })
+  @ApiOperation({
+    summary:
+      'Create invite to project. You need to be project owner in order to use this endpoint.',
+  })
+  async createInvite(
+    @Param('id', ParseIntPipe) projectId: number,
+    @Body() createInviteDto: CreateInviteDto,
+    @Req() req: HasJwt,
+  ) {
+    return this.projectsService.createInvite(projectId, createInviteDto, req.user.sub);
   }
 
   @Get(':id/invites')
