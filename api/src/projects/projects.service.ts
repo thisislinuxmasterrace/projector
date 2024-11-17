@@ -109,7 +109,11 @@ export class ProjectsService {
     });
   }
 
-  async createInvite(projectId: number, createInviteDto: CreateInviteDto, userId: number) {
+  async createInvite(
+    projectId: number,
+    createInviteDto: CreateInviteDto,
+    userId: number,
+  ) {
     if (
       createInviteDto.role !== 'owner' &&
       createInviteDto.role !== 'maintainer'

@@ -1,8 +1,12 @@
 import {
   Body,
-  Controller, Delete,
-  Get, HttpCode,
-  HttpStatus, Param, ParseIntPipe,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -23,8 +27,7 @@ import { HasJwt } from '../types/HasJwt';
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @ApiResponse({
     status: HttpStatus.OK,

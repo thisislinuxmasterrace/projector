@@ -93,8 +93,6 @@ export class ProjectsController {
     return this.projectsService.delete(id, req.user.sub);
   }
 
-
-
   @Get(':id/tasks')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get project tasks.' })
@@ -194,7 +192,11 @@ export class ProjectsController {
     @Body() createInviteDto: CreateInviteDto,
     @Req() req: HasJwt,
   ) {
-    return this.projectsService.createInvite(projectId, createInviteDto, req.user.sub);
+    return this.projectsService.createInvite(
+      projectId,
+      createInviteDto,
+      req.user.sub,
+    );
   }
 
   @Get(':id/invites')
