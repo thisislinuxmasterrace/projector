@@ -84,20 +84,6 @@ export class UsersService {
     });
   }
 
-  async delete(userId: number): Promise<Omit<User, 'passwordHash'>> {
-    // todo: what to do with projects/tasks? maybe soft-delete?
-
-    return this.prisma.user.delete({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        surname: true,
-        email: true,
-      },
-    });
-  }
-
   async findOneOnlyPasswordHashAndId(
     email: string,
   ): Promise<{ passwordHash: string; id: number } | null> {
