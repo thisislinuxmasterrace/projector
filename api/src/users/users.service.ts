@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -37,7 +37,7 @@ export class UsersService {
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new BadRequestException('email is already in use');
+          throw new ConflictException('email is already in use');
         }
       } else {
         throw new InternalServerErrorException(
@@ -63,7 +63,7 @@ export class UsersService {
       }));
 
     if (emailExists) {
-      throw new BadRequestException('email is already in use');
+      throw new ConflictException('email is already in use');
     }
 
     return this.prisma.user.update({
