@@ -19,5 +19,15 @@ export default class APIService {
             return config;
         });
     }
+
+    async getUserInfo() {
+        const response = await this.#axiosInstance.get("users/me");
+        return response.data;
+    }
+
+    async patchUserInfo(userData) {
+        const response = await this.#axiosInstance.patch(`users/me`, userData);
+        return response.data;
+    }
 }
 
