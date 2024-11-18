@@ -28,8 +28,16 @@ const UserEditPage = () => {
         setterFunction(e.target.value);
     };
 
-    const onClick = () => {
-        console.log("patched data");
+    const onClick = (e) => {
+        e.preventDefault();
+        if (name.trim().length > 0 && surname.trim().length > 0 && email.trim().length > 0) {
+            apiService.patchUserInfo({
+                email: email.trim(),
+                name: name.trim(),
+                surname: surname.trim(),
+                password: password.trim().length > 0 ? password.trim() : ""
+            }).then(r => console.log(r));
+        }
     };
 
     return (
