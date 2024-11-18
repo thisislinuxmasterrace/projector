@@ -1,13 +1,13 @@
 import {useState} from "react";
 import AuthForm from "../../components/AuthForm/AuthForm";
 import {Link, useNavigate} from "react-router-dom";
-import {login as loginService, register} from "../../services/auth.service";
+import {login as loginService} from "../../services/auth.service";
 import {useAuth} from "../../providers/auth.provider";
 
 const LoginPage = () => {
     const [inputs, setInputs] = useState([
-        {name: "email", type: "email", value: ""},
-        {name: "password", type: "password", value: ""}
+        {name: "email", type: "email", value: "", caption: "Электронная почта"},
+        {name: "password", type: "password", value: "", caption: "Пароль"}
     ]);
 
     const {login} = useAuth();
@@ -24,6 +24,10 @@ const LoginPage = () => {
     const onSubmit = async e => {
         e.preventDefault();
 
+        if (inputs.filter(el => el.value.trim().length === 0)[0]) {
+            return;
+        }
+
         const requestData = {};
 
         inputs.forEach((el, i) => requestData[el.name] = el.value);
@@ -33,7 +37,17 @@ const LoginPage = () => {
             login(token);
             navigate("/");
         } catch (error) {
-            console.error(error);
+            if (error.status === 404) {
+                alert("Такого профиля не существует");
+                return;
+            }
+
+            if (error.status === 401) {
+                alert("Неверный пароль");
+                return;
+            }
+
+            alert("Ошибка входа");
         }
     };
 
