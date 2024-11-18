@@ -10,10 +10,10 @@ const RegisterPage = () => {
     const {login} = useAuth();
 
     const [inputs, setInputs] = useState([
-        {name: "name", type: "text", value: ""},
-        {name: "surname", type: "text", value: ""},
-        {name: "email", type: "email", value: ""},
-        {name: "password", type: "password", value: ""}
+        {name: "name", type: "text", value: "", caption: "Имя"},
+        {name: "surname", type: "text", value: "", caption: "Фамилия"},
+        {name: "email", type: "email", value: "", caption: "Электронная почта"},
+        {name: "password", type: "password", value: "", caption: "Пароль"}
     ]);
 
     const onChange = e => {
@@ -25,6 +25,10 @@ const RegisterPage = () => {
 
     const onSubmit = async e => {
         e.preventDefault();
+
+        if (inputs.filter(el => el.value.trim().length === 0)[0]) {
+            return;
+        }
 
         const requestData = {};
 
@@ -38,7 +42,12 @@ const RegisterPage = () => {
                 navigate("/");
             }
         } catch (error) {
-            console.error(error);
+            if (error.status === 409) {
+                alert("Такой профиль уже существует");
+                return;
+            }
+
+            alert("Ошибка регистрации");
         }
     };
 

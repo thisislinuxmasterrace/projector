@@ -15,13 +15,13 @@ const AuthForm = ({inputs, onChange, onSubmit}) => {
                 return (
                     <div className="input-field col s12" key={input.name}>
                         <input onChange={onChange} id={input.name} type={input.type} className="validate" value={input.value} />
-                        <label htmlFor={input.name}>{capitalizeFirstLetter(input.name)}</label>
+                        <label htmlFor={input.name}>{capitalizeFirstLetter(input.caption)}</label>
                     </div>
                 );
             })}
             <div className="col">
                 <button className="btn waves-effect waves-light orange darken-4" type="submit"
-                        name="action">Submit
+                        name="action">Отправить
                     <i className="material-icons right">send</i>
                 </button>
             </div>
