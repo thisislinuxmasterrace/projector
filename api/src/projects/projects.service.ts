@@ -8,8 +8,6 @@ import { CreateProjectDto } from './dto/createProject.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProjectDto } from './dto/updateProject.dto';
 import { CreateInviteDto } from './dto/createInvite.dto';
-import { AcceptInviteDto } from './dto/acceptInvite.dto';
-import { RejectInviteDto } from './dto/rejectInvite.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -111,7 +109,11 @@ export class ProjectsService {
     });
   }
 
-  async createInvite(createInviteDto: CreateInviteDto, userId: number) {
+  async createInvite(
+    projectId: number,
+    createInviteDto: CreateInviteDto,
+    userId: number,
+  ) {
     if (
       createInviteDto.role !== 'owner' &&
       createInviteDto.role !== 'maintainer'
@@ -123,7 +125,7 @@ export class ProjectsService {
       where: {
         userId_projectId: {
           userId,
-          projectId: createInviteDto.projectId,
+          projectId,
         },
         role: 'owner',
       },
@@ -153,7 +155,7 @@ export class ProjectsService {
       where: {
         userId_projectId: {
           userId: invitedUser.id,
-          projectId: createInviteDto.projectId,
+          projectId,
         },
       },
     });
@@ -164,7 +166,7 @@ export class ProjectsService {
 
     return this.prisma.projectInvite.create({
       data: {
-        projectId: createInviteDto.projectId,
+        projectId,
         userId: invitedUser.id,
         role: createInviteDto.role,
       },
@@ -172,60 +174,6 @@ export class ProjectsService {
         id: true,
         project: { select: { id: true, name: true } },
         user: { select: { email: true } },
-        role: true,
-      },
-    });
-  }
-
-  async acceptInvite(acceptInviteDto: AcceptInviteDto, userId: number) {
-    const invite = await this.prisma.projectInvite.findUnique({
-      where: { id: acceptInviteDto.inviteId },
-    });
-    if (!invite) {
-      throw new NotFoundException('no such invite');
-    }
-
-    if (invite.userId !== userId) {
-      throw new UnauthorizedException(
-        "user don't have permissions to accept this invite",
-      );
-    }
-
-    return this.prisma.$transaction(async () => {
-      await this.prisma.userProject.create({
-        data: {
-          userId: invite.userId,
-          projectId: invite.projectId,
-          role: invite.role,
-        },
-      });
-
-      await this.prisma.projectInvite.delete({ where: { id: invite.id } });
-
-      return this.prisma.project.findUnique({
-        where: { id: invite.projectId },
-        select: { id: true, name: true },
-      });
-    });
-  }
-
-  async rejectInvite(rejectInviteDto: RejectInviteDto, userId: number) {
-    const invite = await this.prisma.projectInvite.findUnique({
-      where: { id: rejectInviteDto.inviteId },
-    });
-    if (!invite) {
-      throw new BadRequestException('no such invite');
-    }
-
-    if (invite.userId !== userId) {
-      throw new UnauthorizedException('not enough permissions');
-    }
-
-    return this.prisma.projectInvite.delete({
-      where: { id: rejectInviteDto.inviteId },
-      select: {
-        id: true,
-        project: { select: { id: true, name: true } },
         role: true,
       },
     });
