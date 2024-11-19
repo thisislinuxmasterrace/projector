@@ -8,9 +8,9 @@ const Header = () => {
                 <div className="nav-wrapper container">
                     <a className="brand-logo center">Projector</a>
                     <ul className="left hide-on-med-and-down">
-                        <li><Link to="/">Main</Link></li>
-                        <li><Link to="/projects">Projects</Link></li>
-                        <li><Link to="/profile">Profile</Link></li>
+                        <li><Link to="/">Главная</Link></li>
+                        <li><Link to="/projects">Проекты</Link></li>
+                        <li><Link to="/profile">Профиль</Link></li>
                     </ul>
                 </div>
             </nav>
