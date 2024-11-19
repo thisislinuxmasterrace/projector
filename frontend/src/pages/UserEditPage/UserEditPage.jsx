@@ -9,6 +9,8 @@ const UserEditPage = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(true);
 
+    const [initialUserData, setInitialUserData] = useState(null);
+
     const {apiService} = useAuth();
 
     useEffect(() => {
@@ -19,6 +21,7 @@ const UserEditPage = () => {
                 setEmail(data.email);
                 setName(data.name);
                 setSurname(data.surname);
+                setInitialUserData(data);
             });
             setLoading(false);
         }
@@ -31,12 +34,30 @@ const UserEditPage = () => {
     const onClick = (e) => {
         e.preventDefault();
         if (name.trim().length > 0 && surname.trim().length > 0 && email.trim().length > 0) {
-            apiService.patchUserInfo({
-                email: email.trim(),
-                name: name.trim(),
-                surname: surname.trim(),
-                password: password.trim().length > 0 ? password.trim() : ""
-            }).then(r => console.log(r));
+            const userData = {};
+
+            if (name !== initialUserData.name) {
+                userData.name = name.trim();
+            }
+
+            if (surname !== initialUserData.surname) {
+                userData.surname = surname.trim();
+            }
+
+            if (email !== initialUserData.email) {
+                userData.email = email.trim();
+            }
+
+            if (password.trim().length > 0) {
+                userData.password = password.trim();
+            }
+
+            if (JSON.stringify(userData) !== "{}") {
+                apiService.patchUserInfo(userData).then(data => {
+                    setInitialUserData(data);
+                    alert("Данные пользователя были обновлены");
+                });
+            }
         }
     };
 
