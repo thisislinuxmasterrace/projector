@@ -56,6 +56,6 @@ jobs:
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
             ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         - name: Connect and deploy
-          run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd projector && git pull && docker compose pull api frontend && docker compose up -d && docker system prune -a -f && exit"
+          run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd projector && git pull && docker compose pull api frontend && docker compose up -d && docker system prune -a -f && cd .. && docker compose restart nginx && exit"
         - name: Cleanup
           run: rm -rf ~/.ssh
