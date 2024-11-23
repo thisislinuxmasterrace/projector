@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 const MainPage = () => {
     const {apiService} = useAuth();
     const [name, setName] = useState("Артём");
+    const [invitesCount, setInvitesCount] = useState(0);
 
     const [currentTasks, setCurrentTasks] = useState([
         {
@@ -27,6 +28,7 @@ const MainPage = () => {
         if (apiService) {
             apiService.getUserInfo().then(data => setName(data.name));
             apiService.getCurrentTasks().then(data => setCurrentTasks(data));
+            apiService.getInvites().then(data => setInvitesCount(data.length));
         }
     }, [apiService]);
 
@@ -39,7 +41,7 @@ const MainPage = () => {
                         <div className="card blue-grey darken-1">
                             <div className="card-content white-text">
                                 <span className="card-title">Приглашения в проекты</span>
-                                <p>Никуда не приглашают :(</p>
+                                {invitesCount === 0 ? <p>Никуда не приглашают :(</p> : <p>Подробнее ({invitesCount} шт)</p>}
                             </div>
                         </div>
                     </div>

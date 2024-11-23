@@ -64,5 +64,14 @@ export default class APIService {
             alert("Ошибка при получении списка проектов");
         }
     }
+
+    async getInvites() {
+        try {
+            const response = await this.#axiosInstance.get("users/me/invites");
+            return response.data;
+        } catch (error) {
+            alert("Ошибка при получении списка приглашений");
+        }
+    }
 }
 

@@ -13,24 +13,30 @@ const MainSideNav = () => {
         {project: {name: "Обход санкций", id: 5}}
     ]);
 
+    const [createdProjectsCount, setCreatedProjectsCount] = useState(0);
+
     const {apiService} = useAuth();
+
+    const counterFunction = () => {
+        setCreatedProjectsCount(createdProjectsCount + 1);
+    };
 
     useEffect(() => {
         if (apiService) {
             apiService.getMyProjects().then(data => setProjects(data));
         }
-    }, [apiService]);
+    }, [apiService, createdProjectsCount]);
 
     return (
         <div className="main-sidenav__wrapper">
             <div>
                 <h5>Ваши проекты:</h5>
                 <ul>
-                    {projects.map((projectInfo) => <li id={projectInfo.project.id}><Link
+                    {projects.map((projectInfo) => <li key={projectInfo.project.id}><Link
                         to={`/projects/${projectInfo.project.id}`}>{projectInfo.project.name}</Link></li>)}
                 </ul>
             </div>
-            <NewProjectButton/>
+            <NewProjectButton counterFunction={counterFunction} />
         </div>
     );
 };
