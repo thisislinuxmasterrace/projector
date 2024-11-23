@@ -1,0 +1,26 @@
+.tasks-list {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 340px;
+    overflow: auto;
+    margin-top: 15px;
+}
+
+.tasks-list::-webkit-scrollbar {
+    width: 0;
+}
+
+.tasks-list__item {
+    width: 50%;
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tasks-list__item i {
+    cursor: pointer;
+}

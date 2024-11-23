@@ -21,13 +21,48 @@ export default class APIService {
     }
 
     async getUserInfo() {
-        const response = await this.#axiosInstance.get("users/me");
-        return response.data;
+        try {
+            const response = await this.#axiosInstance.get("users/me");
+            return response.data;
+        } catch (error) {
+            alert("Ошибка получения информации пользователя");
+        }
     }
 
     async patchUserInfo(userData) {
-        const response = await this.#axiosInstance.patch(`users/me`, userData);
-        return response.data;
+        try {
+            const response = await this.#axiosInstance.patch(`users/me`, userData);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка изменения пользовательских данных");
+        }
+    }
+
+    async createProject(name) {
+        try {
+            const response = await this.#axiosInstance.post(`projects`, {name});
+            return response.data;
+        } catch (error) {
+            alert("Ошибка создания проекта");
+        }
+    }
+
+    async getCurrentTasks() {
+        try {
+            const response = await this.#axiosInstance.get("users/me/pending-tasks");
+            return response.data;
+        } catch (error) {
+            alert("Ошибка при получении текущих задач");
+        }
+    }
+
+    async getMyProjects() {
+        try {
+            const response = await this.#axiosInstance.get("users/me/projects");
+            return response.data;
+        } catch (error) {
+            alert("Ошибка при получении списка проектов");
+        }
     }
 }
 

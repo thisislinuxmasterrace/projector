@@ -1,3 +1,13 @@
-.main-sidenav {
-    padding-top: 70px;
+.main-sidenav__wrapper {
+    padding-top: 0;
+    left: 0;
+    transform: translateX(0);
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90%;
+    width: 100%;
+    max-width: 300px;
+    padding-left: 10px;
 }

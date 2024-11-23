@@ -1,0 +1,52 @@
+.new-project {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    height: 120px;
+}
+
+.new-project__form {
+    display: grid;
+    grid-template-areas:
+            "a a"
+            "b c";
+    height: inherit;
+    padding: 10px;
+}
+
+.new-project__input {
+    display: block;
+    width: 100%;
+    grid-area: a;
+    height: 60%;
+    margin: 0 !important;
+    text-align: center;
+}
+
+.new-project__input {
+    text-transform: capitalize;
+}
+
+.new-project__button {
+    width: 100%;
+    height: 40%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    min-height: 45px;
+    border: none;
+    cursor: pointer;
+}
+
+.new-project__closed {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.new-project__closed span {
+    margin-right: 5px;
+}
