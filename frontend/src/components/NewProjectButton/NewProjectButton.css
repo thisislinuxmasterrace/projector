@@ -23,10 +23,6 @@
     text-align: center;
 }
 
-.new-project__input {
-    text-transform: capitalize;
-}
-
 .new-project__button {
     width: 100%;
     height: 40%;
