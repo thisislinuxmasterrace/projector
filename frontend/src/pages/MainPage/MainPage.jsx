@@ -9,6 +9,8 @@ const MainPage = () => {
     const [name, setName] = useState("Артём");
     const [invitesCount, setInvitesCount] = useState(0);
 
+    const [invitesColor, setInvitesColor] = useState("light-blue darken-4");
+
     const [currentTasks, setCurrentTasks] = useState([
         {
             id: 1,
@@ -32,13 +34,21 @@ const MainPage = () => {
         }
     }, [apiService]);
 
+    useEffect(() => {
+        if (invitesCount > 0) {
+            setInvitesColor("light-blue darken-4");
+        } else {
+            setInvitesColor("blue-grey darken-1");
+        }
+    }, [invitesCount]);
+
     return (
         <MainLayout>
             <div className="page-title">Привет, {name}!</div>
             <div className="row">
                 <Link to="/invites">
                     <div className="col s6">
-                        <div className="card blue-grey darken-1">
+                        <div className={`card ${invitesColor}`}>
                             <div className="card-content white-text">
                                 <span className="card-title">Приглашения в проекты</span>
                                 {invitesCount === 0 ? <p>Никуда не приглашают :(</p> : <p>Подробнее ({invitesCount} шт)</p>}
@@ -47,7 +57,7 @@ const MainPage = () => {
                     </div>
                 </Link>
                 <div className="col s6">
-                    <div className="card light-blue darken-1">
+                    <div className="card deep-orange darken-4">
                         <div className="card-content white-text">
                             <span className="card-title">Последний проект</span>
                             <p>Открыть "ProjectName"</p>
