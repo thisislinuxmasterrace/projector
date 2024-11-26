@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute/PublicOnlyRoute";
+import TaskPage from "./pages/TaskPage/TaskPage";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <PublicOnlyRoute element={<LoginPage />} />
+    },
+    {
+        path: "/tasks/:id",
+        element: <PrivateRoute element={<TaskPage />} />
     }
 ]);
 

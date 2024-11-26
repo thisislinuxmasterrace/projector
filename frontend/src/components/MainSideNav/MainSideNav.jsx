@@ -2,7 +2,7 @@ import "./MainSideNav.css";
 import NewProjectButton from "../NewProjectButton/NewProjectButton";
 import {useEffect, useState} from "react";
 import {useAuth} from "../../providers/auth.provider";
-import {Link} from "react-router-dom";
+import ProjectsList from "../ProjectsList/ProjectsList";
 
 const MainSideNav = () => {
     const [projects, setProjects] = useState([
@@ -29,13 +29,7 @@ const MainSideNav = () => {
 
     return (
         <div className="main-sidenav__wrapper">
-            <div>
-                <h5>Ваши проекты:</h5>
-                <ul>
-                    {projects.map((projectInfo) => <li key={projectInfo.project.id}><Link
-                        to={`/projects/${projectInfo.project.id}`}>{projectInfo.project.name}</Link></li>)}
-                </ul>
-            </div>
+            <ProjectsList projects={projects} />
             <NewProjectButton counterFunction={counterFunction} />
         </div>
     );

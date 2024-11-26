@@ -1,8 +1,11 @@
 import "./CurrentTasksList.css";
+import {useNavigate} from "react-router-dom";
 
 const CurrentTasksList = ({tasks}) => {
+    const navigate = useNavigate();
+
     const onClick = id => {
-        alert(id);
+        navigate(`/tasks/${id}`);
     };
 
     return (

@@ -1,0 +1,19 @@
+.projects-list {
+    height: 100%;
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+}
+
+.projects-list::-webkit-scrollbar {
+    width: 0;
+}
+
+.projects-list__item {
+    padding: 15px;
+    margin-bottom: 0;
+    color: royalblue;
+}
+
+.projects-list__item-title {
+    font-size: 17px;
+}
