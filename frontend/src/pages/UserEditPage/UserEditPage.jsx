@@ -1,6 +1,7 @@
 import MainLayout from "../../layouts/MainLayout/MainLayout";
 import {useEffect, useState} from "react";
 import {useAuth} from "../../providers/auth.provider";
+import {Link} from "react-router-dom";
 
 const UserEditPage = () => {
     const [name, setName] = useState("Артём");
@@ -63,6 +64,7 @@ const UserEditPage = () => {
 
     return (
         <MainLayout>
+            <Link to="/">На главную</Link>
             <div className="page-title">Редактировать профиль</div>
             <form>
                 <div className="row">

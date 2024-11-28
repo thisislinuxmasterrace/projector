@@ -91,5 +91,14 @@ export default class APIService {
             alert("Ошибка отклонения приглашения в проект");
         }
     }
+
+    async getProject(id) {
+        try {
+            const response = await this.#axiosInstance.get(`/projects/${id}`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка загрузки информации о проекте");
+        }
+    }
 }
 

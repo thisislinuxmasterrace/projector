@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute/PublicOnlyRoute";
 import TaskPage from "./pages/TaskPage/TaskPage";
+import ProjectPage from "./pages/ProjectPage/ProjectPage";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     {
         path: "/tasks/:id",
         element: <PrivateRoute element={<TaskPage />} />
+    },
+    {
+        path: "/projects/:id",
+        element: <PrivateRoute element={<ProjectPage />} />
     }
 ]);
 
