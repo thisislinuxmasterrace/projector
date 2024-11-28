@@ -1,0 +1,20 @@
+.invites-wrapper {
+    max-height: 530px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.invites-wrapper::-webkit-scrollbar {
+    width: 0;
+}
+
+.invites-item {
+    width: 33%;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.invites-item .card {
+    margin: 5px;
+}

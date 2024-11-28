@@ -73,5 +73,23 @@ export default class APIService {
             alert("Ошибка при получении списка приглашений");
         }
     }
+
+    async acceptInvite(id) {
+        try {
+            const response = await this.#axiosInstance.post(`users/me/invites/${id}/accept`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка принятия приглашения в проект");
+        }
+    }
+
+    async rejectInvite(id) {
+        try {
+            const response = await this.#axiosInstance.delete(`users/me/invites/${id}/reject`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка отклонения приглашения в проект");
+        }
+    }
 }
 
