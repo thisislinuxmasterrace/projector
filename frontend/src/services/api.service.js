@@ -98,6 +98,7 @@ export default class APIService {
             return response.data;
         } catch (error) {
             alert("Ошибка загрузки информации о проекте");
+            return {error: true};
         }
     }
 }

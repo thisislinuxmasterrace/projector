@@ -1,0 +1,29 @@
+.project-tasks {
+    width: 100%;
+    height: 69vh;
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 5%;
+    max-width: 1000px;
+}
+
+.project-tasks__col {
+    padding: 10px;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.project-tasks__col-title {
+    font-weight: bold;
+    text-align: center;
+}
+
+.project-tasks__col-content {
+    overflow-y: auto;
+    height: 63vh;
+}
+
+.project-tasks__col-content::-webkit-scrollbar {
+    display: none;
+}
