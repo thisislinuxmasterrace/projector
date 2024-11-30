@@ -101,5 +101,15 @@ export default class APIService {
             return {error: true};
         }
     }
+
+    async deleteUserFromProject(userId, projectId) {
+        try {
+            const response = await this.#axiosInstance.delete(`/projects/${projectId}/users/${userId}`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка загрузки информации о проекте");
+            return {error: true};
+        }
+    };
 }
 

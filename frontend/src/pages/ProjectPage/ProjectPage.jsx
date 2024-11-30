@@ -7,10 +7,18 @@ import ProjectTasks from "../../components/ProjectTasks/ProjectTasks";
 const ProjectPage = () => {
     const {id} = useParams();
     const {apiService} = useAuth();
+    const [blocked, setBlocked] = useState(true);
 
     const navigate = useNavigate();
 
     const [project, setProject] = useState({id, name: "Миссия 5.9"});
+
+    const leave = async () => {
+        const userId = await (await apiService.getUserInfo()).id;
+        await apiService.deleteUserFromProject(userId, project.id);
+        navigate("/");
+        alert(`Вы покинули проект ${project.name}`);
+    };
 
     useEffect(() => {
         if (apiService) {
@@ -19,10 +27,11 @@ const ProjectPage = () => {
                     navigate("/");
                 } else {
                     setProject(data);
+                    setBlocked(false);
                 }
             });
         }
-    });
+    }, [apiService, id, navigate]);
 
     return (
         <MainLayout>
@@ -32,7 +41,7 @@ const ProjectPage = () => {
                 <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%"}}>
                     <button className="btn-large orange darken-1">Изменить <i
                         className="material-icons right">create</i></button>
-                    <button className="btn-small red darken-2">Покинуть <i
+                    <button disabled={blocked} onClick={leave} className="btn-small red darken-2">Покинуть <i
                         className="material-icons right">directions_run</i></button>
                 </div>
             </div>
