@@ -68,10 +68,15 @@ export class ProjectsService {
       throw new UnauthorizedException('not enough permissions');
     }
 
-    return this.prisma.project.findUnique({
+    const project = await this.prisma.project.findUnique({
       where: { id: projectId },
       select: { id: true, name: true },
     });
+
+    return {
+      ...project,
+      myRole: userProject.role,
+    };
   }
 
   async delete(projectId: number, userId: number) {
