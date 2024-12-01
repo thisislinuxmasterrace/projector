@@ -111,5 +111,14 @@ export default class APIService {
             return {error: true};
         }
     };
+
+    async patchProjectName(projectId, name) {
+        try {
+            const response = await this.#axiosInstance.patch(`projects/${projectId}`, {name});
+            return response.data;
+        } catch (error) {
+            alert("Ошибка изменения имени проекта");
+        }
+    }
 }
 

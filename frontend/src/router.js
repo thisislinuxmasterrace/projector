@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import PublicOnlyRoute from "./components/PublicOnlyRoute/PublicOnlyRoute";
 import TaskPage from "./pages/TaskPage/TaskPage";
 import ProjectPage from "./pages/ProjectPage/ProjectPage";
+import EditProjectPage from "./pages/EditProjectPage/EditProjectPage";
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
     {
         path: "/projects/:id",
         element: <PrivateRoute element={<ProjectPage />} />
+    },
+    {
+        path: "/projects/:id/edit",
+        element: <PrivateRoute element={<EditProjectPage />} />
     }
 ]);
 

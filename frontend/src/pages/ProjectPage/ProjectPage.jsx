@@ -8,6 +8,7 @@ const ProjectPage = () => {
     const {id} = useParams();
     const {apiService} = useAuth();
     const [blocked, setBlocked] = useState(true);
+    const [isOwner, setIsOwner] = useState(false);
 
     const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ const ProjectPage = () => {
                 } else {
                     setProject(data);
                     setBlocked(false);
+                    setIsOwner(data.myRole === "owner");
                 }
             });
         }
@@ -39,7 +41,7 @@ const ProjectPage = () => {
             <div style={{display: 'flex', gap: 25, alignItems: 'center'}}>
                 <div className="page-title" style={{minWidth: "fit-content"}}>{project.name}</div>
                 <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%"}}>
-                    <button className="btn-large orange darken-1">Изменить <i
+                    <button disabled={!isOwner} onClick={() => navigate(`/projects/${id}/edit`)} className="btn-large orange darken-1">Изменить <i
                         className="material-icons right">create</i></button>
                     <button disabled={blocked} onClick={leave} className="btn-small red darken-2">Покинуть <i
                         className="material-icons right">directions_run</i></button>
