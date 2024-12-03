@@ -3,8 +3,10 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {useAuth} from "../../providers/auth.provider";
 import {useEffect, useState} from "react";
 import ProjectTasks from "../../components/ProjectTasks/ProjectTasks";
+import {useEvent} from "../../providers/event.provider";
 
 const ProjectPage = () => {
+    const {emitEvent} = useEvent();
     const {id} = useParams();
     const {apiService} = useAuth();
     const [blocked, setBlocked] = useState(true);
@@ -19,6 +21,7 @@ const ProjectPage = () => {
         await apiService.deleteUserFromProject(userId, project.id);
         navigate("/");
         alert(`Вы покинули проект ${project.name}`);
+        emitEvent("updateProjectsEvent", {});
     };
 
     useEffect(() => {

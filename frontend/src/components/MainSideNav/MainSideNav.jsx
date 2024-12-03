@@ -1,10 +1,13 @@
 import "./MainSideNav.css";
 import NewProjectButton from "../NewProjectButton/NewProjectButton";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuth} from "../../providers/auth.provider";
 import ProjectsList from "../ProjectsList/ProjectsList";
+import {useEvent} from "../../providers/event.provider";
 
 const MainSideNav = () => {
+    const { subscribeToEvent, unsubscribeFromEvent } = useEvent();
+
     const [projects, setProjects] = useState([
         {project: {name: "Ликвидация водки", id: 1}},
         {project: {name: "Запись в друзья", id: 2}},
@@ -26,6 +29,20 @@ const MainSideNav = () => {
             apiService.getMyProjects().then(data => setProjects(data));
         }
     }, [apiService, createdProjectsCount]);
+
+    const handleUpdateProjects = useCallback(() => {
+        if (apiService) {
+            apiService.getMyProjects().then(data => setProjects(data));
+        }
+    }, [apiService]);
+
+    useEffect(() => {
+        subscribeToEvent("updateProjectsEvent", handleUpdateProjects);
+
+        return () => {
+            unsubscribeFromEvent("updateProjectsEvent", handleUpdateProjects);
+        };
+    }, [handleUpdateProjects, subscribeToEvent, unsubscribeFromEvent]);
 
     return (
         <div className="main-sidenav__wrapper">

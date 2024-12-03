@@ -3,11 +3,14 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {useAuth} from "../../providers/auth.provider";
 import "./EditProjectPage.css";
+import {useEvent} from "../../providers/event.provider";
 
 const EditProjectPage = () => {
     const {id} = useParams();
 
-    const {apiService} = useAuth();
+    const { emitEvent } = useEvent();
+
+    const { apiService, userInfo } = useAuth();
 
     const [project, setProject] = useState({id, name: "apiService"});
     const [loading, setLoading] = useState(true);
@@ -28,6 +31,7 @@ const EditProjectPage = () => {
                 const newProject = JSON.parse(JSON.stringify(project));
                 newProject.name = data.name;
                 setProject(newProject);
+                emitEvent("updateProjectsEvent", {});
             });
         }
     };
@@ -35,8 +39,13 @@ const EditProjectPage = () => {
     const removeUser = userId => {
         apiService.deleteUserFromProject(userId, id).then(data => {
             alert(`Пользователь ${data.user.name} ${data.user.surname} (${data.user.email}) удалён из проекта`);
-            apiService.getProjectUsers(id).then(users => setProjectUsers(users));
+            if (userId !== userInfo.id) {
+                apiService.getProjectUsers(id).then(users => setProjectUsers(users));
+            } else {
+                navigate("/");
+            }
         });
+        emitEvent("updateProjectsEvent", {});
     };
 
     const onProjectInviteFormSubmit = e => {

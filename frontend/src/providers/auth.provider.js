@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [token, setToken] = useState(null);
     const [apiService, setApiService] = useState(null);
+    const [userInfo, setUserInfo] = useState({name: "Артём", id: 14});
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -39,8 +40,14 @@ export const AuthProvider = ({ children }) => {
         }
     }, [token]);
 
+    useEffect(() => {
+        if (apiService) {
+            apiService.getUserInfo().then(data => setUserInfo(data));
+        }
+    }, [apiService]);
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, token, apiService }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, token, apiService, userInfo }}>
             {children}
         </AuthContext.Provider>
     );
