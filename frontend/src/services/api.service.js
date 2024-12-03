@@ -120,5 +120,28 @@ export default class APIService {
             alert("Ошибка изменения имени проекта");
         }
     }
+
+    async getProjectUsers(projectId) {
+        try {
+            const response = await this.#axiosInstance.get(`projects/${projectId}/users`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка получения пользователей, относящихся к проекту");
+        }
+    }
+
+    async createProjectInvite(email, role, projectId) {
+        try {
+            const response = await this.#axiosInstance.post(`projects/${projectId}/invites`, {email, role});
+            return response.data;
+        } catch (error) {
+            if (error.response.status === 404) {
+                alert("Ошибка приглашения: нет такого пользователя");
+                return {error: true};
+            }
+            alert("Ошибка приглашения нового пользователя");
+            return {error: true};
+        }
+    }
 }
 

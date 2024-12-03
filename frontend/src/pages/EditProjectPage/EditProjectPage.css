@@ -15,3 +15,28 @@
 .project-name-form__button {
     width: 50%;
 }
+
+.project-users-table {
+    max-width: 600px;
+}
+
+.project-users-table__wrapper {
+    overflow-y: auto;
+    height: 275px;
+    max-width: 600px;
+}
+
+.project-users-table__wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.project-invite-form {
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.project-invite-form__input {
+    width: 50%;
+}
