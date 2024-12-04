@@ -143,5 +143,23 @@ export default class APIService {
             return {error: true};
         }
     }
+
+    async getProjectTasks(id) {
+        try {
+            const response = await this.#axiosInstance.get(`projects/${id}/tasks`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка получения задач проекта");
+        }
+    }
+
+    async updateTask(id, data) {
+        try {
+            const response = await this.#axiosInstance.patch(`tasks/${id}`, data);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка изменения задачи");
+        }
+    }
 }
 

@@ -50,7 +50,7 @@ const ProjectPage = () => {
                         className="material-icons right">directions_run</i></button>
                 </div>
             </div>
-            <ProjectTasks />
+            <ProjectTasks project={project} />
         </MainLayout>
     );
 };
