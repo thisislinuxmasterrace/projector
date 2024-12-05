@@ -220,8 +220,8 @@ export class ProjectsService {
       orderBy: [
         {
           updatedAt: {
-            sort: 'desc', // Descending order for updatedAt
-            nulls: 'first', // Nulls will be placed at the beginning
+            sort: 'desc',
+            nulls: 'first',
           },
         },
         {

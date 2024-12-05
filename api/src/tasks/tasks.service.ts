@@ -135,7 +135,7 @@ export class TasksService {
 
     return this.prisma.task.update({
       where: { id: task.id },
-      data: { ...updateTaskDto, doneAt },
+      data: { ...updateTaskDto, doneAt, updatedAt: new Date().toISOString() },
       select: {
         id: true,
         name: true,
