@@ -221,7 +221,7 @@ export class ProjectsService {
         {
           updatedAt: {
             sort: 'desc',
-            nulls: 'first',
+            nulls: 'last',
           },
         },
         {
