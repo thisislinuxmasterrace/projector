@@ -31,7 +31,7 @@ const ProjectTaskItem = ({task, changeTaskSize, changeTaskPriority}) => {
                         {translateTaskSize(task.size)}
                     </button>
 
-                    <ul id={`sizedropdown${task.id}`} className='dropdown-content'>
+                    <ul onClick={e => e.preventDefault()} id={`sizedropdown${task.id}`} className='dropdown-content'>
                         <li onClick={() => changeTaskSize(task.id, "none")}><span>НЕТ</span></li>
                         <li onClick={() => changeTaskSize(task.id, "xs")}><span>XS</span></li>
                         <li onClick={() => changeTaskSize(task.id, "s")}><span>S</span></li>
@@ -47,7 +47,7 @@ const ProjectTaskItem = ({task, changeTaskSize, changeTaskPriority}) => {
                         {translateTaskPriority(task.priority)}
                     </button>
 
-                    <ul id={`prioritydropdown${task.id}`} className='dropdown-content'>
+                    <ul onClick={e => e.preventDefault()} id={`prioritydropdown${task.id}`} className='dropdown-content'>
                         <li onClick={() => changeTaskPriority(task.id, "none")}><span>НЕТ</span></li>
                         <li onClick={() => changeTaskPriority(task.id, "low")}><span>НИЗКИЙ</span></li>
                         <li onClick={() => changeTaskPriority(task.id, "medium")}><span>СРЕДНИЙ</span></li>

@@ -161,5 +161,15 @@ export default class APIService {
             alert("Ошибка изменения задачи");
         }
     }
+
+    async getTask(id) {
+        try {
+            const response = await this.#axiosInstance.get(`tasks/${id}`);
+            return response.data;
+        } catch (error) {
+            alert("Ошибка получения задачи");
+            return {error: true};
+        }
+    }
 }
 
