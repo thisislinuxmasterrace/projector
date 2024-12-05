@@ -11,7 +11,8 @@ import { CreateInviteDto } from './dto/createInvite.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {
+  }
 
   async create(createProjectDto: CreateProjectDto, userId: number) {
     return this.prisma.$transaction(async () => {
@@ -216,6 +217,17 @@ export class ProjectsService {
           },
         },
       },
+      orderBy: [
+        {
+          updatedAt: {
+            sort: 'desc', // Descending order for updatedAt
+            nulls: 'first', // Nulls will be placed at the beginning
+          },
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
     });
   }
 
