@@ -40,21 +40,42 @@ const ProjectTasks = ({project}) => {
                 <div className="project-tasks__col-title">Новые</div>
                 <div className="project-tasks__col-content">
                     {tasks.filter(task => task.status === "todo")
-                        .map(task => <ProjectTaskItem changeTaskPriority={changeTaskPriority} key={task.id} task={task} changeTaskSize={changeTaskSize} />)}
+                        .map(task =>
+                            <ProjectTaskItem
+                                changeTaskPriority={changeTaskPriority}
+                                key={task.id}
+                                task={task}
+                                changeTaskSize={changeTaskSize}
+                            />
+                        )}
                 </div>
             </div>
             <div className="project-tasks__col grey lighten-4">
                 <div className="project-tasks__col-title">В процессе</div>
                 <div className="project-tasks__col-content">
                     {tasks.filter(task => task.status === "inProgress")
-                        .map(task => <ProjectTaskItem changeTaskPriority={changeTaskPriority} key={task.id} task={task} changeTaskSize={changeTaskSize} />)}
+                        .map(task =>
+                            <ProjectTaskItem
+                                changeTaskPriority={changeTaskPriority}
+                                key={task.id}
+                                task={task}
+                                changeTaskSize={changeTaskSize}
+                            />
+                        )}
                 </div>
             </div>
             <div className="project-tasks__col grey lighten-4">
                 <div className="project-tasks__col-title">Готовы</div>
                 <div className="project-tasks__col-content">
                     {tasks.filter(task => task.status === "done")
-                        .map(task => <ProjectTaskItem changeTaskPriority={changeTaskPriority} key={task.id} task={task} changeTaskSize={changeTaskSize} />)}
+                        .map(task =>
+                            <ProjectTaskItem
+                                changeTaskPriority={changeTaskPriority}
+                                key={task.id}
+                                task={task}
+                                changeTaskSize={changeTaskSize}
+                            />
+                        )}
                 </div>
             </div>
         </div>
